@@ -12,7 +12,6 @@ const wss = new WebSocket.Server({ server });
 
 app.use(express.json({ limit: '50mb' }));
 
-// ── ADMIN AYARLARI ────────────────────────────────────────────────────────────
 const ADMIN_USER = 'admin';
 const ADMIN_PASS = 'admin';
 const ADMIN_TOKENS = new Set();
@@ -26,7 +25,6 @@ function requireAdmin(req, res, next) {
   next();
 }
 
-// ── ODALAR VE VERİ KONTROLÜ ───────────────────────────────────────────────────
 const ROOMS_FILE = path.join(__dirname, 'rooms.json');
 const MAX_MESSAGES = 200;
 const MAX_AGE_MS = 24 * 60 * 60 * 1000;
@@ -77,7 +75,6 @@ function broadcastOnline(roomId) {
   broadcastToRoom(roomId, { type: 'online', count: users.length, users });
 }
 
-// ── ADMIN PANEL API ──────────────────────────────────────────────────────────
 app.post('/admin/login', (req, res) => {
   const { username, password } = req.body;
   if (username === ADMIN_USER && password === ADMIN_PASS) {
@@ -114,15 +111,12 @@ app.delete('/admin/rooms/:id', requireAdmin, (req, res) => {
   res.json({ ok: true });
 });
 
-// ── GENEL API ─────────────────────────────────────────────────────────────────
 app.get('/rooms', (req, res) => {
   res.json(Object.entries(ROOMS).map(([id, r]) => ({ id, name: r.name })));
 });
 
-// ── WEBSOCKET ─────────────────────────────────────────────────────────────────
 wss.on('connection', (ws) => {
   let joinedRoom = null;
-
   ws.on('message', (raw) => {
     let msg; try { msg = JSON.parse(raw); } catch { return; }
 
