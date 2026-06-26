@@ -471,8 +471,7 @@ document.querySelectorAll('.anim-btn').forEach(btn => {
     startAnim(currentAnim);
   });
 });
-
-// EMOJİ PANELİ AYARLARI
+  // EMOJİ PANELİ AYARLARI
 const EMOJIS = ['🖤','🌫️','🌧️','⛓️','🥀','🩸','🔪','🍷','🕯️','🎭','💤','👀','🤫','🕊️','☠️','⌛'];
 EMOJIS.forEach(emo => {
   const span = document.createElement('span'); span.className='emoji-item'; span.textContent=emo;
@@ -553,7 +552,8 @@ hiddenFileInput.addEventListener('change', async () => {
   };
   reader.readAsDataURL(file);
 });
-  // SES KAYDETME (MİKROFON) SİSTEMİ
+
+// SES KAYDETME (MİKROFON) SİSTEMİ
 let mediaRecorder = null; let audioChunks = [];
 micBtn.addEventListener('click', async () => {
   if (mediaRecorder && mediaRecorder.state === "recording") { mediaRecorder.stop(); return; }
