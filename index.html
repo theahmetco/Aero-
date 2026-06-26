@@ -5,88 +5,64 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content" />
   <title>Laviva</title>
   <style>
-    :root { --accent:#dc2626; --accent-dark:#991b1b; --accent-light:#f87171; --accent-bubble:#dc2626; }
-    * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+    :root { --accent:#dc2626; --accent-dark:#991b1b; --accent-light:#f87171; }
+    * { box-shrink:0; box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
     body { font-family:'Segoe UI',system-ui,sans-serif; background:#07070a; color:#e0e0e0; height:100dvh; display:flex; flex-direction:column; overflow:hidden; position:relative; }
     #bg-canvas { position:fixed; inset:0; z-index:0; pointer-events:none; }
-    header,#room-select-screen,#lobby-screen,#connecting-screen,#chat-screen,#closed-screen,#admin-screen { position:relative; z-index:1; }
+    header,#room-select-screen,#lobby-screen,#connecting-screen,#chat-screen { position:relative; z-index:1; }
 
-    /* HEADER */
-    header { padding:12px 16px; background:rgba(15,15,22,0.85); backdrop-filter:blur(12px); border-bottom:1px solid rgba(220,38,38,0.15); display:flex; align-items:center; gap:10px; flex-shrink:0; }
-    header h1 { font-size:1.3rem; font-weight:800; letter-spacing:2px; background:linear-gradient(135deg,var(--accent-light),#3b82f6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; cursor:pointer; user-select:none; }
+    header { padding:12px 16px; background:rgba(15,15,22,0.85); backdrop-filter:blur(12px); border-bottom:1px solid rgba(220,38,38,0.15); display:flex; align-items:center; gap:10px; }
+    header h1 { font-size:1.3rem; font-weight:800; letter-spacing:2px; background:linear-gradient(135deg,var(--accent-light),#3b82f6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; cursor:pointer; }
     #header-right { margin-left:auto; display:flex; align-items:center; gap:6px; }
-    #online-count { font-size:0.8rem; color:var(--accent-light); font-weight:600; display:flex; align-items:center; gap:4px; }
-    #status-dot { width:10px; height:10px; border-radius:50%; background:#eab308; display:inline-block; }
-    #status-dot.yellow { background:#eab308; animation:blink 0.6s infinite; }
-    #status-dot.red    { background:#ef4444; }
-    #status-dot.green  { background:#22c55e; }
-    @keyframes blink { 0%,100%{opacity:1}50%{opacity:0.2} }
-    #online-list { font-size:0.75rem; color:#6b7280; max-width:100px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-
-    .hbtn { background:none; border:none; color:#6b7280; cursor:pointer; font-size:1.1rem; padding:5px; display:flex; align-items:center; border-radius:8px; transition:color 0.2s; }
-    .hbtn:hover { color:var(--accent-light); }
+    #online-count { font-size:0.8rem; color:var(--accent-light); display:flex; align-items:center; gap:4px; }
+    
+    .hbtn { background:none; border:none; color:#6b7280; cursor:pointer; font-size:1.1rem; padding:5px; display:flex; align-items:center; }
     #back-btn { display:none; }
 
-    /* TEMA & AYAR PANELİ */
     #settings-panel { display:none; position:fixed; top:52px; right:12px; background:rgba(15,15,22,0.97); backdrop-filter:blur(16px); border:1px solid rgba(220,38,38,0.2); border-radius:16px; padding:14px; z-index:100; width:220px; flex-direction:column; gap:12px; }
     #settings-panel.open { display:flex; }
-    .sp-label { font-size:0.7rem; color:#4b5563; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
-    .theme-row { display:flex; flex-wrap:wrap; gap:8px; }
-    .theme-dot { width:26px; height:26px; border-radius:50%; cursor:pointer; border:2px solid transparent; transition:transform 0.15s; }
-    .theme-dot.active { border-color:#fff; transform:scale(1.15); }
+    .sp-label { font-size:0.7rem; color:#4b5563; font-weight:700; text-transform:uppercase; }
+    .theme-row { display:flex; gap:8px; }
+    .theme-dot { width:26px; height:26px; border-radius:50%; cursor:pointer; border:2px solid transparent; }
+    .theme-dot.active { border-color:#fff; transform:scale(1.1); }
     .anim-row { display:flex; flex-direction:column; gap:6px; }
-    .anim-btn { padding:6px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.04); color:#9ca3af; font-size:0.75rem; cursor:pointer; text-align:left; transition:all 0.2s; }
+    .anim-btn { padding:6px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.04); color:#9ca3af; font-size:0.75rem; cursor:pointer; text-align:left; }
     .anim-btn.active { border-color:var(--accent-light); background:rgba(220,38,38,0.15); color:#e0e0e0; }
 
-    /* SPOTIFY ALANI */
-    #spotify-container { background:rgba(10,10,15,0.6); border-bottom:1px solid rgba(255,255,255,0.05); padding:8px 12px; display:flex; flex-direction:column; gap:6px; flex-shrink:0; }
+    #spotify-container { background:rgba(10,10,15,0.6); border-bottom:1px solid rgba(255,255,255,0.05); padding:8px 12px; display:flex; flex-direction:column; gap:6px; }
     .spot-bar { display:flex; gap:8px; align-items:center; }
     .spot-input { flex:1; padding:6px 12px; border-radius:18px; border:1px solid rgba(255,255,255,0.1); background:rgba(5,5,10,0.8); color:#fff; font-size:0.8rem; outline:none; }
     .spot-btn { padding:6px 12px; border-radius:18px; border:none; background:#1db954; color:#fff; font-size:0.75rem; font-weight:700; cursor:pointer; }
     #spotify-player-wrapper { display:block; height:80px; width:100%; border-radius:8px; overflow:hidden; }
 
-    /* ODA SEÇİM EKRANI */
-    #room-select-screen { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; padding:24px; }
-    .room-select-card { background:rgba(15,15,22,0.7); backdrop-filter:blur(20px); border:1px solid rgba(220,38,38,0.2); border-radius:20px; padding:28px 24px; display:flex; flex-direction:column; align-items:center; gap:16px; width:100%; max-width:340px; }
-    .room-select-title { font-size:1.5rem; font-weight:800; letter-spacing:2px; background:linear-gradient(135deg,var(--accent-light),#3b82f6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-    #rooms-grid { display:flex; flex-direction:column; gap:8px; width:100%; }
-    .room-btn { padding:12px 16px; border-radius:12px; border:1px solid rgba(255,255,255,0.08); background:rgba(10,10,15,0.8); color:#e0e0e0; font-size:0.92rem; font-weight:600; cursor:pointer; width:100%; text-align:left; display:flex; align-items:center; gap:10px; transition:all 0.2s; }
-    .room-btn:hover { border-color:var(--accent-light); background:rgba(220,38,38,0.08); transform:translateX(3px); }
-    .room-btn .room-name { flex:1; }
+    #room-select-screen { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; }
+    .room-select-card { background:rgba(15,15,22,0.7); backdrop-filter:blur(20px); border:1px solid rgba(220,38,38,0.2); border-radius:20px; padding:24px; width:100%; max-width:340px; }
+    #rooms-grid { display:flex; flex-direction:column; gap:8px; }
+    .room-btn { padding:12px 16px; border-radius:12px; border:1px solid rgba(255,255,255,0.08); background:rgba(10,10,15,0.8); color:#e0e0e0; font-weight:600; cursor:pointer; text-align:left; }
 
-    /* LOBİ EKRANI */
-    #lobby-screen { flex:1; display:none; flex-direction:column; align-items:center; justify-content:center; gap:20px; padding:24px; }
-    .lobby-card { background:rgba(15,15,22,0.7); backdrop-filter:blur(20px); border:1px solid rgba(220,38,38,0.2); border-radius:20px; padding:32px 28px; display:flex; flex-direction:column; align-items:center; gap:14px; width:100%; max-width:320px; }
-    .lobby-title { font-size:1.5rem; font-weight:800; letter-spacing:2px; background:linear-gradient(135deg,var(--accent-light),#3b82f6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-    #selected-room-name { font-size:0.9rem; color:var(--accent-light); font-weight:700; background:rgba(220,38,38,0.12); padding:5px 14px; border-radius:20px; border:1px solid rgba(220,38,38,0.25); }
-    #nick-input,#room-pass-input { padding:12px 18px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); background:rgba(10,10,15,0.8); color:#fff; font-size:1rem; outline:none; width:100%; }
-    #join-btn { padding:13px 32px; border-radius:12px; border:none; background:linear-gradient(135deg,var(--accent),#1d4ed8); color:#fff; font-size:1rem; font-weight:600; cursor:pointer; width:100%; box-shadow:0 4px 20px rgba(220,38,38,0.25); }
-    #lobby-error { font-size:0.82rem; color:#f87171; min-height:18px; }
+    #lobby-screen { flex:1; display:none; flex-direction:column; align-items:center; justify-content:center; padding:24px; }
+    .lobby-card { background:rgba(15,15,22,0.7); border:1px solid rgba(220,38,38,0.2); border-radius:20px; padding:24px; display:flex; flex-direction:column; gap:14px; width:100%; max-width:320px; }
+    #nick-input,#room-pass-input { padding:12px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); background:rgba(10,10,15,0.8); color:#fff; outline:none; width:100%; }
+    #join-btn { padding:13px; border-radius:12px; border:none; background:linear-gradient(135deg,var(--accent),#1d4ed8); color:#fff; font-weight:600; cursor:pointer; }
 
-    /* BAĞLANTI EKRANI */
-    #connecting-screen { flex:1; display:none; flex-direction:column; align-items:center; justify-content:center; gap:12px; }
+    #connecting-screen { flex:1; display:none; align-items:center; justify-content:center; }
     .spinner { width:32px; height:32px; border:3px solid rgba(255,255,255,0.1); border-top-color:var(--accent-light); border-radius:50%; animation:spin 0.8s linear infinite; }
     @keyframes spin { to { transform:rotate(360deg); } }
 
-    /* CHAT EKRANI */
     #chat-screen { display:none; flex:1; flex-direction:column; overflow:hidden; }
-    #room-label { text-align:center; font-size:0.72rem; color:#4b5563; padding:3px 0; background:rgba(5,5,10,0.5); flex-shrink:0; }
-    #messages { flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:6px; overscroll-behavior:contain; }
-    .msg { display:flex; flex-direction:column; gap:2px; max-width:80%; position:relative; animation:msgIn 0.2s ease; }
-    @keyframes msgIn { from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none} }
+    #room-label { text-align:center; font-size:0.72rem; color:#4b5563; padding:4px; background:rgba(5,5,10,0.5); }
+    #messages { flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:6px; }
+    .msg { display:flex; flex-direction:column; max-width:80%; }
     .msg.mine { align-self:flex-end; align-items:flex-end; }
     .msg.other { align-self:flex-start; align-items:flex-start; }
-    .msg-nick { font-size:0.7rem; color:#6b7280; padding:0 4px; margin-top:6px; }
-    .msg.mine .msg-nick { color:var(--accent-light); }
-    .msg-bubble { padding:9px 14px; border-radius:16px; font-size:0.93rem; line-height:1.5; word-break:break-word; }
-    .msg.mine .msg-bubble { background:linear-gradient(135deg,var(--accent),var(--accent-dark)); color:#fff; border-bottom-right-radius:4px; }
+    .msg-nick { font-size:0.7rem; color:#6b7280; }
+    .msg-bubble { padding:9px 14px; border-radius:16px; font-size:0.93rem; word-break:break-word; }
+    .msg.mine .msg-bubble { background:var(--accent); color:#fff; border-bottom-right-radius:4px; }
     .msg.other .msg-bubble { background:rgba(20,20,30,0.9); border:1px solid rgba(255,255,255,0.05); color:#e0e0e0; border-bottom-left-radius:4px; }
     
-    #input-area { padding:10px 12px; background:rgba(15,15,22,0.85); backdrop-filter:blur(12px); border-top:1px solid rgba(255,255,255,0.05); display:flex; gap:8px; align-items:center; }
-    #msg-input { flex:1; padding:11px 16px; border-radius:24px; border:1px solid rgba(255,255,255,0.12); background:rgba(10,10,15,0.8); color:#fff; font-size:1rem; outline:none; }
-    #send-btn,#mic-btn,#file-btn { width:44px; height:44px; border-radius:50%; border:none; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; }
-    #send-btn { background:linear-gradient(135deg,var(--accent),#1d4ed8); }
-    #mic-btn,#file-btn { background:rgba(25,25,35,0.8); border:1px solid rgba(255,255,255,0.08); }
+    #input-area { padding:10px; background:rgba(15,15,22,0.85); display:flex; gap:8px; align-items:center; }
+    #msg-input { flex:1; padding:11px 16px; border-radius:24px; border:1px solid rgba(255,255,255,0.12); background:rgba(10,10,15,0.8); color:#fff; outline:none; }
+    #send-btn { width:44px; height:44px; border-radius:50%; border:none; color:#fff; cursor:pointer; background:var(--accent); }
   </style>
 </head>
 <body>
@@ -95,8 +71,7 @@
 <header>
   <h1 id="logo-title">laviva</h1>
   <div id="header-right">
-    <span id="online-count" style="display:none"><span id="status-dot" class="yellow"></span><span id="online-num">0</span></span>
-    <span id="online-list"></span>
+    <span id="online-count" style="display:none">🟢 <span id="online-num">0</span></span>
     <button id="back-btn" class="hbtn">◀</button>
     <button id="settings-btn" class="hbtn">⚙️</button>
   </div>
@@ -104,7 +79,7 @@
 
 <div id="spotify-container">
   <div class="spot-bar">
-    <input type="text" id="spot-link" class="spot-input" placeholder="Spotify şarkı/çalma listesi linki yapıştır..." />
+    <input type="text" id="spot-link" class="spot-input" placeholder="Spotify linki yapıştır..." />
     <button id="spot-sync-btn" class="spot-btn">Müziği Aç</button>
   </div>
   <div id="spotify-player-wrapper">
@@ -129,19 +104,16 @@
 
 <div id="room-select-screen">
   <div class="room-select-card">
-    <div class="room-select-title">LAVIVA</div>
     <div id="rooms-grid"></div>
   </div>
 </div>
 
 <div id="lobby-screen">
   <div class="lobby-card">
-    <div class="lobby-title">Giriş Yap</div>
     <div id="selected-room-name"></div>
     <input type="text" id="nick-input" placeholder="Kullanıcı Adın" maxlength="30" />
     <input type="password" id="room-pass-input" placeholder="Oda Şifresi" />
-    <button id="join-btn">Odaya Bağlan</button>
-    <div id="lobby-error"></div>
+    <button id="join-btn">Bağlan</button>
   </div>
 </div>
 
@@ -152,29 +124,23 @@
 <div id="chat-screen">
   <div id="room-label"></div>
   <div id="messages"></div>
-  <div id="typing-status"></div>
   <div id="input-area">
-    <button id="file-btn">📎</button>
     <input type="text" id="msg-input" placeholder="Mesajını yaz..." maxlength="500" />
-    <button id="mic-btn">🎤</button>
     <button id="send-btn">➔</button>
   </div>
 </div>
 
 <script>
-  const NICK_KEY = 'laviva_nick', THEME_KEY = 'laviva_theme', ANIM_KEY = 'laviva_anim', PASS_KEY = 'laviva_passes';
+  const NICK_KEY = 'laviva_nick', THEME_KEY = 'laviva_theme', ANIM_KEY = 'laviva_anim';
   let nick = localStorage.getItem(NICK_KEY) || '', ws = null, selectedRoomId = null;
-  let currentAnim = localStorage.getItem(ANIM_KEY) || 'blood';
-  let animFrame = null, savedPasses = JSON.parse(localStorage.getItem(PASS_KEY) || '{}');
+  let currentAnim = localStorage.getItem(ANIM_KEY) || 'blood', animFrame = null;
 
   const canvas = document.getElementById('bg-canvas'), ctx = canvas.getContext('2d');
   let W = window.innerWidth, H = window.innerHeight;
   canvas.width = W; canvas.height = H;
   window.addEventListener('resize', () => { W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; });
 
-  // ── 3 PREMIUM CANVASES ANIMASYONLARI ──────────────────────────────────────────
-  
-  // 1. Animasyon: Ağlayan Kan
+  // 1. Ağlayan Kan
   const bloodDrops = [];
   function animBlood() {
     animFrame = requestAnimationFrame(animBlood);
@@ -184,14 +150,15 @@
       bloodDrops.push({ x: Math.random()*W, y: -10, len: Math.random()*15+10, speed: Math.random()*2+1 });
     }
     ctx.fillStyle = '#991b1b';
-    bloodDrops.forEach((d, i) => {
+    for(let i=0; i<bloodDrops.length; i++) {
+      let d = bloodDrops[i];
       ctx.fillRect(d.x, d.y, 2.5, d.len);
       d.y += d.speed;
       if(d.y > H) bloodDrops.splice(i, 1);
-    });
+    }
   }
 
-  // 2. Animasyon: Gece Şimşekleri
+  // 2. Gece Şimşekleri
   let flashOpacity = 0;
   function animLightning() {
     animFrame = requestAnimationFrame(animLightning);
@@ -201,28 +168,25 @@
       flashOpacity = Math.random() * 0.4 + 0.2;
     }
     if (flashOpacity > 0) {
-      ctx.fillStyle = `rgba(191, 219, 254, ${flashOpacity})`;
+      ctx.fillStyle = 'rgba(191, 219, 254, ' + flashOpacity + ')';
       ctx.fillRect(0, 0, W, H);
       flashOpacity -= 0.04;
     }
   }
 
-  // 3. Animasyon: Cyber Neon Pulse
+  // 3. Cyber Neon Pulse
   let pulseRadius = 0;
   function animNeon() {
     animFrame = requestAnimationFrame(animNeon);
     ctx.fillStyle = 'rgba(7, 7, 10, 0.08)';
     ctx.fillRect(0, 0, W, H);
-    
     pulseRadius += 1.5;
     if (pulseRadius > Math.max(W, H) * 0.5) pulseRadius = 0;
-    
     ctx.beginPath();
     ctx.arc(W/2, H/2, pulseRadius, 0, Math.PI * 2);
     const activeColor = document.documentElement.style.getPropertyValue('--accent').trim();
-    ctx.strokeStyle = activeColor === '#2563eb' 
-      ? `rgba(37, 99, 235, ${1 - (pulseRadius / (Math.max(W, H)*0.5))})`
-      : `rgba(220, 38, 38, ${1 - (pulseRadius / (Math.max(W, H)*0.5))})`;
+    let alpha = 1 - (pulseRadius / (Math.max(W, H)*0.5));
+    ctx.strokeStyle = activeColor === '#2563eb' ? 'rgba(37, 99, 235, ' + alpha + ')' : 'rgba(220, 38, 38, ' + alpha + ')';
     ctx.lineWidth = 3;
     ctx.stroke();
   }
@@ -235,7 +199,6 @@
     else if (name==='neon') animNeon();
   }
 
-  // ── SPOTIFY KONTROLÜ ──────────────────────────────────────────────────────────
   document.getElementById('spot-sync-btn').addEventListener('click', () => {
     const link = document.getElementById('spot-link').value.trim();
     if (link && ws && ws.readyState === WebSocket.OPEN) {
@@ -248,14 +211,13 @@
     let embedUrl = "https://open.spotify.com/embed/track/4PTG3Z6ehGkBFm6TuvYv2G";
     if (uri.startsWith('spotify:embed:')) {
       const parts = uri.split(':');
-      embedUrl = `https://open.spotify.com/embed/${parts[2]}/${parts[3]}`;
+      embedUrl = 'https://open.spotify.com/embed/' + parts[2] + '/' + parts[3];
     } else if (uri.includes('open.spotify.com/')) {
       embedUrl = uri.replace('open.spotify.com/', 'open.spotify.com/embed/');
     }
     document.getElementById('spotify-player').src = embedUrl;
   }
 
-  // ── APPLICATON VIEWS ──────────────────────────────────────────────────────────
   const roomSelectScreen = document.getElementById('room-select-screen');
   const lobbyScreen = document.getElementById('lobby-screen');
   const connectingScreen = document.getElementById('connecting-screen');
@@ -277,11 +239,7 @@
   }
 
   settingsBtn.addEventListener('click', () => settingsPanel.classList.toggle('open'));
-  backBtn.addEventListener('click', () => {
-    if (ws) { ws.close(); ws=null; }
-    showScreen('room-select');
-    loadRooms();
-  });
+  backBtn.addEventListener('click', () => { if (ws) { ws.close(); ws=null; } showScreen('room-select'); loadRooms(); });
 
   function applyTheme(accent, dark, light) {
     document.documentElement.style.setProperty('--accent', accent);
@@ -302,7 +260,6 @@
     });
   });
 
-  // ── WEBSOCKET SÜREÇLERİ ──────────────────────────────────────────────────────
   async function loadRooms() {
     const res = await fetch('/rooms');
     const rooms = await res.json();
@@ -310,11 +267,10 @@
     rooms.forEach(r => {
       const btn = document.createElement('button');
       btn.className = 'room-btn';
-      btn.innerHTML = `<span class="room-name">${r.name}</span>`;
+      btn.textContent = r.name;
       btn.addEventListener('click', () => {
         selectedRoomId = r.id;
         document.getElementById('selected-room-name').textContent = r.name;
-        document.getElementById('room-pass-input').value = savedPasses[r.id] || '';
         document.getElementById('nick-input').value = nick;
         showScreen('lobby');
       });
@@ -325,31 +281,20 @@
   function connectChat(roomId, password) {
     showScreen('connecting');
     const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-    ws = new WebSocket(`${protocol}//${location.host}`);
+    ws = new WebSocket(protocol + '//' + location.host);
     
-    ws.onopen = () => {
-      ws.send(JSON.stringify({ type: 'join', nick, roomId, password }));
-    };
-
+    ws.onopen = () => { ws.send(JSON.stringify({ type: 'join', nick, roomId, password })); };
     ws.onmessage = (e) => {
       const data = JSON.parse(e.data);
-      if (data.type === 'error') {
-        alert(data.text); showScreen('lobby');
-      } else if (data.type === 'history') {
+      if (data.type === 'error') { alert(data.text); showScreen('lobby'); }
+      else if (data.type === 'history') {
         document.getElementById('room-label').textContent = document.getElementById('selected-room-name').textContent;
         showScreen('chat');
         messagesEl.innerHTML = '';
         data.messages.forEach(m => addMessage(m, m.nick === nick));
-        savedPasses[roomId] = password;
-        localStorage.setItem(PASS_KEY, JSON.stringify(savedPasses));
-      } else if (data.type === 'spotify_sync') {
-        updateSpotifyEmbed(data.uri);
-      } else if (data.type === 'message') {
-        addMessage(data.message, data.message.nick === nick);
-      } else if (data.type === 'online') {
-        document.getElementById('online-num').textContent = data.count;
-        document.getElementById('online-list').textContent = data.users.join(', ');
-      }
+      } else if (data.type === 'spotify_sync') { updateSpotifyEmbed(data.uri); }
+      else if (data.type === 'message') { addMessage(data.message, data.message.nick === nick); }
+      else if (data.type === 'online') { document.getElementById('online-num').textContent = data.count; }
     };
   }
 
@@ -362,11 +307,9 @@
   });
 
   function addMessage(msg, isMine) {
-    if (msg.deleted) return;
     const div = document.createElement('div');
-    div.className = `msg ${isMine?'mine':'other'}`;
-    let body = `<div class="msg-bubble">${msg.text}</div>`;
-    div.innerHTML = `<span class="msg-nick">${msg.nick}</span>${body}`;
+    div.className = 'msg ' + (isMine?'mine':'other');
+    div.innerHTML = '<span class="msg-nick">' + msg.nick + '</span><div class="msg-bubble">' + msg.text + '</div>';
     messagesEl.appendChild(div);
     messagesEl.scrollTop = messagesEl.scrollHeight;
   }
@@ -378,13 +321,9 @@
     msgInput.value = '';
   });
 
-  // Başlangıç tetikleyicileri
   const savedTheme = localStorage.getItem(THEME_KEY);
-  if (savedTheme) {
-    const t = JSON.parse(savedTheme); applyTheme(t.accent, t.dark, t.light);
-  } else {
-    applyTheme('#dc2626', '#991b1b', '#f87171');
-  }
+  if (savedTheme) { const t = JSON.parse(savedTheme); applyTheme(t.accent, t.dark, t.light); }
+  else { applyTheme('#dc2626', '#991b1b', '#f87171'); }
   startAnim(currentAnim);
   loadRooms();
 </script>
