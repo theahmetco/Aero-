@@ -7,14 +7,14 @@
   <style>
     :root { --accent:#dc2626; --accent-dark:#991b1b; --accent-light:#f87171; }
     * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
-    body { font-family:'Segoe UI',system-ui,sans-serif; background:#050508; color:#e0e0e0; height:100dvh; display:flex; flex-direction:column; overflow:hidden; position:relative; }
+    body { font-family:'Segoe UI',system-ui,sans-serif; background:#040406; color:#e0e0e0; height:100dvh; display:flex; flex-direction:column; overflow:hidden; position:relative; }
     
     #bg-canvas { position:absolute; inset:0; z-index:1; pointer-events:none; }
     header, #main-container { position:relative; z-index:2; }
     #main-container { flex:1; display:flex; flex-direction:column; overflow:hidden; }
 
     header { padding:12px 16px; background:rgba(12,12,18,0.85); backdrop-filter:blur(12px); border-bottom:1px solid rgba(220,38,38,0.15); display:flex; align-items:center; gap:10px; }
-    header h1 { font-size:1.3rem; font-weight:800; letter-spacing:2px; background:linear-gradient(135deg,var(--accent-light),#3b82f6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; cursor:pointer; }
+    header h1 { font-size:1.3rem; font-weight:800; letter-spacing:2px; background:linear-gradient(135deg,var(--accent-light),#3b82f6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; cursor:pointer; user-select:none; }
     #header-right { margin-left:auto; display:flex; align-items:center; gap:8px; }
     #online-count { font-size:0.8rem; color:var(--accent-light); font-weight:600; }
     
@@ -31,14 +31,14 @@
     .anim-btn { padding:6px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.04); color:#9ca3af; font-size:0.75rem; cursor:pointer; text-align:left; }
     .anim-btn.active { border-color:var(--accent-light); background:rgba(220,38,38,0.15); color:#e0e0e0; }
 
-    #spotify-container { background:rgba(10,10,15,0.6); border-bottom:1px solid rgba(255,255,255,0.05); padding:8px 12px; display:flex; flex-direction:column; gap:6px; }
+    #spotify-container { background:rgba(10,10,15,0.85); border-bottom:1px solid rgba(255,255,255,0.08); padding:10px 12px; display:flex; flex-direction:column; gap:6px; position:relative; z-index:10; opacity:1 !important; visibility:visible !important; }
     .spot-bar { display:flex; gap:8px; align-items:center; }
     .spot-input { flex:1; padding:6px 12px; border-radius:18px; border:1px solid rgba(255,255,255,0.1); background:rgba(5,5,10,0.8); color:#fff; font-size:0.8rem; outline:none; }
     .spot-btn { padding:6px 12px; border-radius:18px; border:none; background:#1db954; color:#fff; font-size:0.75rem; font-weight:700; cursor:pointer; }
-    #spotify-player-wrapper { display:block; height:80px; width:100%; border-radius:8px; overflow:hidden; position:relative; }
+    #spotify-player-wrapper { display:block; height:80px; width:100%; border-radius:8px; overflow:hidden; position:relative; background:#000; }
 
     .screen { flex:1; display:none; flex-direction:column; align-items:center; justify-content:center; padding:24px; overflow-y:auto; }
-    .card { background:rgba(15,15,22,0.75); backdrop-filter:blur(20px); border:1px solid rgba(220,38,38,0.2); border-radius:20px; padding:24px; width:100%; max-width:340px; display:flex; flex-direction:column; gap:12px; }
+    .card { background:rgba(15,15,22,0.8); backdrop-filter:blur(20px); border:1px solid rgba(220,38,38,0.2); border-radius:20px; padding:24px; width:100%; max-width:340px; display:flex; flex-direction:column; gap:12px; }
     
     #rooms-grid { display:flex; flex-direction:column; gap:8px; width:100%; }
     .room-btn { padding:14px; border-radius:12px; border:1px solid rgba(255,255,255,0.08); background:rgba(10,10,15,0.8); color:#e0e0e0; font-weight:600; cursor:pointer; text-align:left; }
@@ -61,7 +61,6 @@
     #msg-input { flex:1; padding:11px 16px; border-radius:24px; border:1px solid rgba(255,255,255,0.12); background:rgba(10,10,15,0.8); color:#fff; outline:none; }
     #send-btn { width:44px; height:44px; border-radius:50%; border:none; color:#fff; cursor:pointer; background:var(--accent); display:flex; align-items:center; justify-content:center; }
 
-    /* ADMIN PANELU */
     .admin-room-card { display:flex; justify-content:between; align-items:center; background:rgba(255,255,255,0.04); padding:8px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.05); margin-bottom:6px; }
     .del-room-btn { background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:6px; cursor:pointer; font-size:0.75rem; margin-left:auto;}
   </style>
@@ -89,6 +88,7 @@
     </div>
   </div>
 
+  <!-- ODALAR EKRANI -->
   <div id="room-select-screen" class="screen" style="display:flex;">
     <div class="card">
       <div style="font-weight:800; text-align:center; letter-spacing:1px; color:var(--accent-light)">SOHBET ODALARI</div>
@@ -96,6 +96,7 @@
     </div>
   </div>
 
+  <!-- LOBİ EKRANI -->
   <div id="lobby-screen" class="screen">
     <div class="card">
       <div id="selected-room-name" style="text-align:center; font-weight:700;"></div>
@@ -105,10 +106,12 @@
     </div>
   </div>
 
+  <!-- BAĞLANTI EKRANI -->
   <div id="connecting-screen" class="screen">
     <div class="spinner"></div>
   </div>
 
+  <!-- CHAT EKRANI -->
   <div id="chat-screen" class="screen">
     <div id="room-label"></div>
     <div id="messages"></div>
@@ -118,6 +121,7 @@
     </div>
   </div>
 
+  <!-- ADMIN EKRANI -->
   <div id="admin-screen" class="screen">
     <div class="card" style="max-width:400px;">
       <div style="font-weight:800; text-align:center;">LAVIVA ADMIN PANELİ</div>
@@ -132,7 +136,7 @@
         <input type="text" id="new-room-pass" placeholder="Oda Şifresi" style="margin-bottom:8px;"/>
         <button id="add-room-btn" class="primary-btn" style="width:100%; padding:8px; margin-bottom:12px;">Odayı Oluştur</button>
         
-        <div style="font-size:0.8rem; font-weight:700; margin-bottom:6px;">MEVCUT ODALAR</div>
+        <div style="font-size:0.8rem; font-weight:700; margin-bottom:6px;">YÖNETİLEN ODALAR</div>
         <div id="admin-rooms-list"></div>
       </div>
     </div>
@@ -148,15 +152,13 @@
   <div class="sp-label" style="margin-top:8px">Arka Plan Efekti</div>
   <div class="anim-row">
     <button class="anim-btn active" data-anim="blood">🩸 Ağlayan Kan</button>
-    <button class="anim-btn" data-anim="lightning">⚡ Cyber Elektrik</button>
+    <button class="anim-btn" data-anim="lightning">⚡ Bölgesel Yıldırım</button>
     <button class="anim-btn" data-anim="neon">⭕ Cyber Neon Pulse</button>
     <button class="anim-btn" data-anim="none">✕ Kapalı</button>
   </div>
-  <button id="go-admin-btn" style="background:none; border:none; color:#4b5563; font-size:0.75rem; text-align:left; cursor:pointer; margin-top:5px;">🔒 Admin Paneli</button>
 </div>
 
 <script>
-  // ── SES PARÇALARI (Audio Context veya Elmas patlama korumalı ses tetikleyiciler) ──────────────────
   const msgSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2357/2357-84.wav'); 
   const joinSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2019/2019-84.wav');
   msgSound.volume = 0.5; joinSound.volume = 0.4;
@@ -170,11 +172,11 @@
   canvas.width = W; canvas.height = H;
   window.addEventListener('resize', () => { W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; });
 
-  // ── ANIMASYONLAR (Güvenli Döngü) ───────────────────────────────────────────
+  // ── ANIMASYONLAR ───────────────────────────────────────────────────────────
   const bloodDrops = [];
   function animBlood() {
     animFrame = requestAnimationFrame(animBlood);
-    ctx.fillStyle = 'rgba(5, 5, 8, 0.15)';
+    ctx.fillStyle = 'rgba(4, 4, 6, 0.15)';
     ctx.fillRect(0, 0, W, H);
     if(bloodDrops.length < 35 && Math.random() < 0.2) {
       bloodDrops.push({ x: Math.random()*W, y: -10, len: Math.random()*15+10, speed: Math.random()*2 + 1 });
@@ -188,47 +190,93 @@
     }
   }
 
-  // Yenilenen Siber Elektrik Arkları Efekti
-  const electricLines = [];
+  // Bölgesel Fırtına Yıldırımı ve Temaya Duyarlı Sis Efekti
+  let bolt = null;
   function animLightning() {
     animFrame = requestAnimationFrame(animLightning);
-    ctx.fillStyle = 'rgba(5, 5, 8, 0.12)';
+    
+    // Karanlık fırtına arka planı (Bulutumsu koyu sis yapısı için alfa düşük tutuldu)
+    ctx.fillStyle = 'rgba(4, 4, 6, 0.12)';
     ctx.fillRect(0, 0, W, H);
 
-    if (Math.random() < 0.15) {
-      electricLines.push({
-        x: W / 2, y: H / 2,
-        tx: Math.random() * W, ty: Math.random() * H,
-        life: 8
-      });
-    }
-    const activeColor = document.documentElement.style.getPropertyValue('--accent-light').trim() || '#f87171';
-    ctx.strokeStyle = activeColor;
-    ctx.lineWidth = 1.5;
+    const activeColorLight = document.documentElement.style.getPropertyValue('--accent-light').trim() || '#f87171';
+    const activeColorDark = document.documentElement.style.getPropertyValue('--accent-dark').trim() || '#991b1b';
 
-    for (let i = 0; i < electricLines.length; i++) {
-      let l = electricLines[i];
-      ctx.beginPath();
-      ctx.moveTo(l.x, l.y);
-      // Zigzag oluşturma
-      let steps = 4;
-      let cx = l.x, cy = l.y;
-      for(let s=1; s<=steps; s++) {
-        let targetX = l.x + (l.tx - l.x) * (s/steps) + (Math.random()*40 - 20);
-        let targetY = l.y + (l.ty - l.y) * (s/steps) + (Math.random()*40 - 20);
-        ctx.lineTo(targetX, targetY);
-        cx = targetX; cy = targetY;
+    // Yeni şimşek yaratma tetikleyicisi
+    if (!bolt && Math.random() < 0.02) {
+      const strikeX = Math.random() * W;
+      const strikeY = Math.random() * (H * 0.4); // Ekranın üst yarısında bir merkez nokta
+      bolt = {
+        startX: strikeX,
+        startY: strikeY,
+        opacity: 1.0,
+        segments: [],
+        clouds: []
+      };
+
+      // Yıldırım segmentlerini oluştur
+      let curX = strikeX;
+      let curY = strikeY;
+      while (curY < H * 0.8) {
+        let nextX = curX + (Math.random() * 60 - 30);
+        let nextY = curY + (Math.random() * 35 + 15);
+        bolt.segments.push({ x1: curX, y1: curY, x2: nextX, y2: nextY });
+        curX = nextX;
+        curY = nextY;
       }
+
+      // Yıldırım etrafına yayılacak sis bulutları tanımla
+      for (let k = 0; k < 5; k++) {
+        bolt.clouds.push({
+          cx: strikeX + (Math.random() * 120 - 60),
+          cy: strikeY + (Math.random() * 120 - 60),
+          radius: Math.random() * 100 + 80
+        });
+      }
+    }
+
+    if (bolt) {
+      // 1. Temaya duyarlı sis/bulut kümesini yıldırım alanına bas
+      bolt.clouds.forEach(c => {
+        let grad = ctx.createRadialGradient(c.cx, c.cy, 10, c.cx, c.cy, c.radius);
+        grad.addColorStop(0, activeColorDark + '1a'); // Yarı şeffaf tema rengi sis
+        grad.addColorStop(0.5, '#00000033'); // Araya giren karartı/bulut efekti
+        grad.addColorStop(1, 'transparent');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(c.cx, c.cy, c.radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // 2. Yıldırımın kendisini çiz
+      ctx.strokeStyle = activeColorLight;
+      ctx.lineWidth = 2.5;
+      ctx.shadowColor = activeColorLight;
+      ctx.shadowBlur = 15;
+      ctx.globalAlpha = bolt.opacity;
+
+      ctx.beginPath();
+      bolt.segments.forEach(seg => {
+        ctx.moveTo(seg.x1, seg.y1);
+        ctx.lineTo(seg.x2, seg.y2);
+      });
       ctx.stroke();
-      l.life--;
-      if (l.life <= 0) electricLines.splice(i, 1);
+
+      // Değerleri sıfırla/temizle
+      ctx.shadowBlur = 0;
+      ctx.globalAlpha = 1.0;
+
+      bolt.opacity -= 0.12;
+      if (bolt.opacity <= 0) {
+        bolt = null;
+      }
     }
   }
 
   let pulseRadius = 0;
   function animNeon() {
     animFrame = requestAnimationFrame(animNeon);
-    ctx.fillStyle = 'rgba(5, 5, 8, 0.08)';
+    ctx.fillStyle = 'rgba(4, 4, 6, 0.08)';
     ctx.fillRect(0, 0, W, H);
     pulseRadius += 2;
     if (pulseRadius > Math.max(W, H) * 0.5) pulseRadius = 0;
@@ -285,8 +333,8 @@
     document.getElementById('online-count').style.display = id === 'chat' ? 'flex' : 'none';
   }
 
+  // Logo Tıklaması Doğrudan Admin Paneline Götürür
   document.getElementById('logo-title').addEventListener('click', () => showScreen('admin'));
-  document.getElementById('go-admin-btn').addEventListener('click', () => { document.getElementById('settings-panel').classList.remove('open'); showScreen('admin'); });
   document.getElementById('settings-btn').addEventListener('click', () => document.getElementById('settings-panel').classList.toggle('open'));
   
   document.getElementById('back-btn').addEventListener('click', () => {
@@ -314,6 +362,10 @@
   });
 
   // ── CHAT & REST PROCESSES ───────────────────────────────────────────────────
+  const roomsGrid = document.getElementById('rooms-grid');
+  const messagesEl = document.getElementById('messages');
+  const msgInput = document.getElementById('msg-input');
+
   async function loadRooms() {
     try {
       const res = await fetch('/rooms');
@@ -333,10 +385,9 @@
       });
     } catch(e){}
   }
-
   function connectChat(roomId, password) {
     showScreen('connecting');
-    isHistoryLoading = true; // Geçmiş yüklenirken sesleri engellemek için flag aktif
+    isHistoryLoading = true;
     const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
     ws = new WebSocket(protocol + '//' + location.host);
     
@@ -349,7 +400,6 @@
         showScreen('chat');
         messagesEl.innerHTML = '';
         data.messages.forEach(m => addMessage(m, m.nick === nick));
-        // Geçmiş basımı tamamen bitti, artık sesler çalabilir:
         setTimeout(() => { isHistoryLoading = false; }, 500);
       } else if (data.type === 'spotify_sync') { 
         updateSpotifyEmbed(data.uri); 
@@ -386,7 +436,8 @@
     ws.send(JSON.stringify({ type: 'chat', nick, text }));
     msgInput.value = '';
   });
-  // ── ADMIN PANEL AYARLARI VE AKSİYONLARI ─────────────────────────────────────
+
+  // ── ADMIN PANEL AYARLARI ────────────────────────────────────────────────────
   document.getElementById('admin-login-btn').addEventListener('click', async () => {
     const username = document.getElementById('admin-user').value;
     const password = document.getElementById('admin-pass').value;
