@@ -12,10 +12,10 @@ const wss = new WebSocket.Server({ server });
 
 app.use(express.json({ limit: '50mb' }));
 
-// ── ADMIN ─────────────────────────────────────────────────────────────────────
+// ── ADMIN AYARLARI ───────────────────────────────────────────────────────────
 const ADMIN_USER = 'admin';
 const ADMIN_PASS = 'admin';
-const ADMIN_TOKENS = new Set(); // basit session token
+const ADMIN_TOKENS = new Set();
 
 function genToken() {
   return crypto.randomBytes(24).toString('hex');
@@ -26,7 +26,7 @@ function requireAdmin(req, res, next) {
   next();
 }
 
-// ── ODALAR (disk'ten yükle, yoksa varsayılan) ─────────────────────────────────
+// ── ODALAR VE DOSYA YÖNETİMİ ─────────────────────────────────────────────────
 const ROOMS_FILE = path.join(__dirname, 'rooms.json');
 const SHUTDOWN_TIME = new Date('2030-12-31T23:59:59+03:00').getTime();
 const MAX_MESSAGES = 200;
@@ -39,9 +39,7 @@ function loadRooms() {
   return {
     '1': { name: 'Oda 1', password: 'sifre1' },
     '2': { name: 'Oda 2', password: 'sifre2' },
-    '3': { name: 'Oda 3', password: 'sifre3' },
-    '4': { name: 'Oda 4', password: 'sifre4' },
-    '5': { name: 'Oda 5', password: 'sifre5' },
+    '3': { name: 'Oda 3', password: 'sifre3' }
   };
 }
 function saveRooms() {
@@ -49,10 +47,9 @@ function saveRooms() {
 }
 
 let ROOMS = loadRooms();
-
-// Her oda için mesaj & client
 const roomMessages = {};
 const roomClients  = {};
+let globalSpotifyUri = 'https://open.spotify.com/embed/track/4PTG3Z6ehGkBFm6TuvYv2G'; // Varsayılan oynatıcı linki
 
 function initRoom(id) {
   if (roomMessages[id]) return;
@@ -90,11 +87,13 @@ function broadcastOnline(roomId) {
   broadcastToRoom(roomId, { type: 'online', count: users.length, users });
 }
 
-// ── CLOUDINARY ────────────────────────────────────────────────────────────────
+// ── CLOUDINARY UPLOAD ────────────────────────────────────────────────────────
 function uploadToCloudinary(base64Data, resourceType, callback) {
   const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
   const apiKey    = process.env.CLOUDINARY_API_KEY;
   const apiSecret = process.env.CLOUDINARY_API_SECRET;
+  if (!cloudName || !apiKey || !apiSecret) return callback(new Error('Cloudinary yapılandırması eksik'));
+  
   const timestamp = Math.floor(Date.now() / 1000);
   const signature = crypto.createHash('sha1').update(`timestamp=${timestamp}${apiSecret}`).digest('hex');
   const postData  = `file=${encodeURIComponent(base64Data)}&timestamp=${timestamp}&api_key=${apiKey}&signature=${signature}`;
@@ -117,10 +116,7 @@ function uploadToCloudinary(base64Data, resourceType, callback) {
   req.end();
 }
 
-// ── STATIC ────────────────────────────────────────────────────────────────────
-app.use(express.static(path.join(__dirname, 'public')));
-
-// ── AUTH ──────────────────────────────────────────────────────────────────────
+// ── ADMIN VE PUBLIC API UÇ NOKTALARI ─────────────────────────────────────────
 app.post('/admin/login', (req, res) => {
   const { username, password } = req.body;
   if (username === ADMIN_USER && password === ADMIN_PASS) {
@@ -128,116 +124,48 @@ app.post('/admin/login', (req, res) => {
     ADMIN_TOKENS.add(token);
     return res.json({ ok: true, token });
   }
-  res.status(403).json({ ok: false, error: 'Kullanıcı adı veya şifre hatalı' });
+  res.status(403).json({ ok: false, error: 'Hatalı giriş' });
 });
 
-app.post('/admin/logout', requireAdmin, (req, res) => {
-  ADMIN_TOKENS.delete(req.headers['x-admin-token']);
-  res.json({ ok: true });
-});
-
-// ── ADMIN PANEL API ───────────────────────────────────────────────────────────
-// Odaları listele
 app.get('/admin/rooms', requireAdmin, (req, res) => {
   const list = Object.entries(ROOMS).map(([id, r]) => ({ id, name: r.name, password: r.password, online: roomClients[id] ? roomClients[id].size : 0 }));
   res.json(list);
 });
 
-// Oda güncelle (isim + şifre)
-app.put('/admin/rooms/:id', requireAdmin, (req, res) => {
-  const { id } = req.params;
-  const { name, password } = req.body;
-  if (!ROOMS[id]) return res.status(404).json({ ok: false, error: 'Oda yok' });
-  if (name)     ROOMS[id].name     = String(name).slice(0, 40);
-  if (password) ROOMS[id].password = String(password).slice(0, 100);
-  saveRooms();
-  res.json({ ok: true });
-});
-
-// Yeni oda ekle
 app.post('/admin/rooms', requireAdmin, (req, res) => {
   const { name, password } = req.body;
-  if (!name || !password) return res.status(400).json({ ok: false, error: 'Eksik alan' });
+  if (!name || !password) return res.status(400).json({ ok: false, error: 'Eksik bilgi' });
   const id = String(Date.now());
   ROOMS[id] = { name: String(name).slice(0, 40), password: String(password).slice(0, 100) };
-  initRoom(id);
-  saveRooms();
+  initRoom(id); saveRooms();
   res.json({ ok: true, id });
 });
 
-// Oda sil
 app.delete('/admin/rooms/:id', requireAdmin, (req, res) => {
   const { id } = req.params;
-  if (!ROOMS[id]) return res.status(404).json({ ok: false, error: 'Oda yok' });
-  // odadaki herkesi kopar
+  if (!ROOMS[id]) return res.status(404).json({ ok: false, error: 'Oda bulunamadı' });
   if (roomClients[id]) roomClients[id].forEach((_, ws) => ws.close());
-  delete ROOMS[id];
-  delete roomMessages[id];
-  delete roomClients[id];
-  saveRooms();
-  res.json({ ok: true });
+  delete ROOMS[id]; delete roomMessages[id]; delete roomClients[id];
+  saveRooms(); res.json({ ok: true });
 });
 
-// Odanın mesajlarını sil
-app.delete('/admin/rooms/:id/messages', requireAdmin, (req, res) => {
-  const { id } = req.params;
-  if (!ROOMS[id]) return res.status(404).json({ ok: false, error: 'Oda yok' });
-  roomMessages[id] = [];
-  saveRoomMessages(id);
-  broadcastToRoom(id, { type: 'history', messages: [] });
-  res.json({ ok: true });
-});
-
-// ── PUBLIC API ────────────────────────────────────────────────────────────────
 app.get('/shutdown-time', (req, res) => res.json({ shutdownTime: SHUTDOWN_TIME }));
-
-app.get('/rooms', (req, res) => {
-  const list = Object.entries(ROOMS).map(([id, r]) => ({ id, name: r.name }));
-  res.json(list);
-});
+app.get('/rooms', (req, res) => res.json(Object.entries(ROOMS).map(([id, r]) => ({ id, name: r.name }))));
 
 app.post('/verify-room', (req, res) => {
   const { roomId, password } = req.body;
   const room = ROOMS[roomId];
-  if (!room) return res.status(404).json({ ok: false, error: 'Oda bulunamadı' });
-  if (room.password !== password) return res.status(403).json({ ok: false, error: 'Yanlış şifre' });
+  if (!room) return res.status(404).json({ ok: false, error: 'Oda yok' });
+  if (room.password !== password) return res.status(403).json({ ok: false, error: 'Şifre yanlış' });
   res.json({ ok: true, roomName: room.name });
 });
 
-app.post('/upload-audio', (req, res) => {
-  if (Date.now() >= SHUTDOWN_TIME) return res.status(403).json({ error: 'closed' });
-  const { audio, nick, roomId } = req.body;
-  if (!audio || !nick || !ROOMS[roomId]) return res.status(400).json({ error: 'missing' });
-  uploadToCloudinary(audio, 'video', (err, url) => {
-    if (err || !url) return res.status(500).json({ error: 'failed' });
-    const m = { id: Date.now()+'_'+Math.random().toString(36).slice(2), nick: nick.slice(0,30), text:'🎤 Sesli mesaj', audioUrl: url, time: new Date().toISOString(), deleted: false };
-    roomMessages[roomId].push(m);
-    if (roomMessages[roomId].length > MAX_MESSAGES) roomMessages[roomId] = roomMessages[roomId].slice(-MAX_MESSAGES);
-    saveRoomMessages(roomId);
-    broadcastToRoom(roomId, { type: 'message', message: m });
-    res.json({ ok: true });
-  });
+// DOĞRUDAN KÖK DİZİNDEKİ INDEX.HTML DOSYASINI OKUMA VE SERVİS ETME
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.post('/upload-file', (req, res) => {
-  if (Date.now() >= SHUTDOWN_TIME) return res.status(403).json({ error: 'closed' });
-  const { file, nick, fileType, fileName, roomId } = req.body;
-  if (!file || !nick || !ROOMS[roomId]) return res.status(400).json({ error: 'missing' });
-  let resourceType = 'auto', msgText = '📄 '+(fileName||'Dosya');
-  if (fileType?.startsWith('image/')) { resourceType='image'; msgText='🖼 Fotoğraf'; }
-  else if (fileType?.startsWith('video/')) { resourceType='video'; msgText='🎬 Video'; }
-  uploadToCloudinary(file, resourceType, (err, url) => {
-    if (err || !url) return res.status(500).json({ error: 'failed' });
-    const m = { id: Date.now()+'_'+Math.random().toString(36).slice(2), nick: nick.slice(0,30), text: msgText, fileUrl: url, fileType: fileType||'', fileName: fileName||'Dosya', time: new Date().toISOString(), deleted: false };
-    roomMessages[roomId].push(m);
-    if (roomMessages[roomId].length > MAX_MESSAGES) roomMessages[roomId] = roomMessages[roomId].slice(-MAX_MESSAGES);
-    saveRoomMessages(roomId);
-    broadcastToRoom(roomId, { type: 'message', message: m });
-    res.json({ ok: true });
-  });
-});
-
-// ── WEBSOCKET ─────────────────────────────────────────────────────────────────
+// ── WEBSOCKET İŞLEMLERİ ──────────────────────────────────────────────────────
 wss.on('connection', (ws) => {
   let joinedRoom = null;
 
@@ -247,52 +175,42 @@ wss.on('connection', (ws) => {
 
     if (msg.type === 'join' && msg.nick && msg.roomId && msg.password) {
       const room = ROOMS[msg.roomId];
-      if (!room || room.password !== msg.password) { ws.send(JSON.stringify({ type: 'error', text: 'Yanlış şifre' })); return; }
+      if (!room || room.password !== msg.password) { ws.send(JSON.stringify({ type: 'error', text: 'Hatalı şifre' })); return; }
       joinedRoom = msg.roomId;
       initRoom(joinedRoom);
-      cleanRoom(joinedRoom);
-      roomClients[joinedRoom].set(ws, msg.nick.slice(0,30));
+      roomClients[joinedRoom].set(ws, msg.nick.slice(0, 30));
       ws.send(JSON.stringify({ type: 'history', messages: roomMessages[joinedRoom] }));
-      ws.send(JSON.stringify({ type: 'shutdown', shutdownTime: SHUTDOWN_TIME }));
+      ws.send(JSON.stringify({ type: 'spotify_sync', url: globalSpotifyUri }));
       broadcastOnline(joinedRoom);
-      broadcastToRoom(joinedRoom, { type: 'system', text: msg.nick.slice(0,30)+' katıldı', kind: 'join' });
     }
 
     if (!joinedRoom) return;
 
-    if (msg.type === 'typing' && msg.nick) {
-      roomClients[joinedRoom].forEach((_, c) => {
-        if (c !== ws && c.readyState === WebSocket.OPEN) c.send(JSON.stringify({ type: 'typing', nick: msg.nick.slice(0,30) }));
-      });
+    if (msg.type === 'spotify_change' && msg.url) {
+      let cleanUrl = msg.url;
+      // Normal spotify linkini embed linkine dönüştürme kontrolü
+      if (cleanUrl.includes('open.spotify.com') && !cleanUrl.includes('/embed')) {
+        cleanUrl = cleanUrl.replace('open.spotify.com/', 'open.spotify.com/embed/');
+      }
+      globalSpotifyUri = cleanUrl;
+      broadcastToRoom(joinedRoom, { type: 'spotify_sync', url: globalSpotifyUri });
     }
 
     if (msg.type === 'chat' && msg.nick && msg.text) {
-      const m = { id: Date.now()+'_'+Math.random().toString(36).slice(2), nick: msg.nick.slice(0,30), text: msg.text.slice(0,500), time: new Date().toISOString(), deleted: false };
+      const m = { id: Date.now()+'_'+Math.random().toString(36).slice(2), nick: msg.nick.slice(0, 30), text: msg.text.slice(0, 500), time: new Date().toISOString() };
       roomMessages[joinedRoom].push(m);
       if (roomMessages[joinedRoom].length > MAX_MESSAGES) roomMessages[joinedRoom] = roomMessages[joinedRoom].slice(-MAX_MESSAGES);
       saveRoomMessages(joinedRoom);
       broadcastToRoom(joinedRoom, { type: 'message', message: m });
     }
-
-    if (msg.type === 'delete' && msg.id) {
-      const m = roomMessages[joinedRoom].find(x => x.id === msg.id);
-      if (m && m.nick === msg.nick) {
-        m.deleted = true; m.text = ''; m.audioUrl = null; m.fileUrl = null;
-        saveRoomMessages(joinedRoom);
-        broadcastToRoom(joinedRoom, { type: 'deleted', id: msg.id });
-      }
-    }
   });
 
   ws.on('close', () => {
     if (!joinedRoom) return;
-    const nick = roomClients[joinedRoom]?.get(ws);
     roomClients[joinedRoom]?.delete(ws);
     broadcastOnline(joinedRoom);
-    if (nick) broadcastToRoom(joinedRoom, { type: 'system', text: nick+' ayrıldı', kind: 'leave' });
-    joinedRoom = null;
   });
 });
 
 const PORT = process.env.PORT || 8080;
-server.listen(PORT, () => console.log('Laviva running on port ' + PORT));
+server.listen(PORT, () => console.log('Sunucu port ' + PORT + ' üzerinde aktif.'));
