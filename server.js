@@ -12,11 +12,9 @@ const wss = new WebSocket.Server({ server });
 
 app.use(express.json({ limit: '50mb' }));
 
-// ── STATİK DOSYALARI VE ANA SAYFAYI SUNMA (Hatayı Çözen Kısım) ──────────────────
-// Klasördeki index.html ve diğer statik varlıkları Express'e tanıtıyoruz
+// ── STATİK DOSYALARI VE ANA SAYFAYI SUNMA ──────────────────────────────────────
 app.use(express.static(path.join(__dirname)));
 
-// Biri doğrudan siteye girdiğinde index.html dosyasını gönderiyoruz
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
@@ -24,7 +22,7 @@ app.get('/', (req, res) => {
 // ── ADMIN ─────────────────────────────────────────────────────────────────────
 const ADMIN_USER = 'admin';
 const ADMIN_PASS = 'admin';
-const ADMIN_TOKENS = new Set(); // basit session token
+const ADMIN_TOKENS = new Set(); // Basit session token yönetimi
 
 function genToken() {
   return crypto.randomBytes(24).toString('hex');
@@ -35,7 +33,7 @@ function requireAdmin(req, res, next) {
   next();
 }
 
-// ── ODALAR (disk'ten yükle, yoksa varsayılan) ─────────────────────────────────
+// ── ODALAR (Disk'ten yükle, yoksa varsayılanları oluştur) ─────────────────────
 const ROOMS_FILE = path.join(__dirname, 'rooms.json');
 const SHUTDOWN_TIME = new Date('2030-12-31T23:59:59+03:00').getTime();
 const MAX_MESSAGES = 200;
@@ -198,7 +196,7 @@ app.post('/upload-file', (req, res) => {
   res.json({ ok: true });
 });
 
-// ── WEBSOCKET ─────────────────────────────────────────────────────────────────
+// ── WEBSOCKET ENTEGRASYONU ────────────────────────────────────────────────────
 wss.on('connection', (ws) => {
   let joinedRoom = null;
   let userNick = null;
@@ -207,6 +205,7 @@ wss.on('connection', (ws) => {
     let msg;
     try { msg = JSON.parse(message); } catch (e) { return; }
 
+    // Odaya Katılma Kontrolü
     if (msg.type === 'join' && msg.roomId && msg.nick && msg.password) {
       const r = rooms.find(x => x.id === msg.roomId);
       if (!r || (r.password && r.password !== msg.password)) {
@@ -228,12 +227,22 @@ wss.on('connection', (ws) => {
 
     if (!joinedRoom) return;
 
+    // Spotify Canlı Müzik Senkronizasyonu (Yeni Eklenen Kısım)
+    if (msg.type === 'spotify-sync' && msg.url) {
+      broadcastToRoom(joinedRoom, {
+        type: 'spotify-broadcast',
+        url: msg.url
+      });
+    }
+
+    // Yazıyor... Bildirimi
     if (msg.type === 'typing' && msg.nick) {
       roomClients[joinedRoom].forEach(c => {
         if (c !== ws && c.readyState === WebSocket.OPEN) c.send(JSON.stringify({ type: 'typing', nick: msg.nick.slice(0, 30) }));
       });
     }
 
+    // Normal Yazılı Chat Mesajı
     if (msg.type === 'chat' && msg.nick && msg.text) {
       const m = { id: Date.now() + '_' + Math.random().toString(36).slice(2), nick: msg.nick.slice(0, 30), text: msg.text.slice(0, 500), time: new Date().toISOString(), deleted: false };
       roomMessages[joinedRoom].push(m);
@@ -242,6 +251,7 @@ wss.on('connection', (ws) => {
       broadcastToRoom(joinedRoom, { type: 'message', message: m });
     }
 
+    // Mesaj Silme İşlemi
     if (msg.type === 'delete' && msg.id) {
       const m = roomMessages[joinedRoom].find(x => x.id === msg.id);
       if (m && m.nick === msg.nick) {
@@ -252,6 +262,7 @@ wss.on('connection', (ws) => {
     }
   });
 
+  // Bağlantı Koptuğunda Temizlik
   ws.on('close', () => {
     if (!joinedRoom) return;
     if (roomClients[joinedRoom]) {
@@ -262,8 +273,8 @@ wss.on('connection', (ws) => {
   });
 });
 
-// ── PORT DİNLEME (Railway Dinamik Port Ayarı) ───────────────────────────────────
-const PORT = process.env.PORT || 8080; // Railway kendi portunu atayacak, yerelde 8080 çalışacak
+// ── PORT DİNLEME (Railway Dinamik Port Uyumluluğu) ─────────────────────────────
+const PORT = process.env.PORT || 8080;
 
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`Sunucu ${PORT} portunda aktif.`);
