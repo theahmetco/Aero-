@@ -20,7 +20,6 @@
     /* HEADER */
     header { padding:12px 16px; background:rgba(10,2,2,0.9); backdrop-filter:blur(12px); border-bottom:1px solid rgba(139,0,0,0.3); display:flex; align-items:center; gap:10px; flex-shrink:0; }
     
-    /* LAVIVA LOGO ANIMASYONU (Kasvetli ve Ağır Kan Kırmızısı Vibe) */
     header h1 { font-size:1.3rem; font-weight:800; letter-spacing:3px; color: #8b0000; text-shadow: 0 0 8px rgba(74,0,0,0.8); animation: bloodPulse 4s ease-in-out infinite; cursor:default; user-select:none; text-transform: lowercase; }
     @keyframes bloodPulse {
       0%, 100% { color: #4a0000; text-shadow: 0 0 4px rgba(74,0,0,0.6); transform: scale(0.98); }
@@ -36,14 +35,13 @@
     @keyframes blink { 0%,100%{opacity:1}50%{opacity:0.3} }
     #online-list { font-size:0.75rem; color:#555; max-width:100px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
-    /* HEADER BUTONLARI */
     .hbtn { background:none; border:none; color:#555; cursor:pointer; font-size:1.1rem; padding:5px; display:flex; align-items:center; border-radius:8px; transition:color 0.2s; }
     .hbtn:hover { color:var(--accent-light); }
     #back-btn { display:none; }
     #sound-btn { font-size:1rem; }
     #sound-btn.muted { color:#333; }
 
-    /* AYARLAR PANELİ (Yalnızca animasyon ve ses kaldı, renk teması kaldırıldı) */
+    /* AYARLAR PANELİ */
     #settings-panel { display:none; position:fixed; top:52px; right:12px; background:rgba(10,5,5,0.98); backdrop-filter:blur(16px); border:1px solid rgba(139,0,0,0.3); border-radius:16px; padding:14px; z-index:100; width:220px; flex-direction:column; gap:12px; }
     #settings-panel.open { display:flex; }
     .sp-label { font-size:0.7rem; color:#666; font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-top:4px; }
@@ -88,9 +86,17 @@
     .spinner { width:32px; height:32px; border:3px solid rgba(139,0,0,0.1); border-top-color:var(--accent-light); border-radius:50%; animation:spin 1s linear infinite; }
     @keyframes spin { to { transform:rotate(360deg); } }
 
-    /* CHAT */
+    /* CHAT & SPOTIFY PANELI */
     #chat-screen { display:none; flex:1; flex-direction:column; overflow:hidden; }
     #room-label { text-align:center; font-size:0.72rem; color:#555; padding:4px 0; background:rgba(5,2,2,0.7); flex-shrink:0; letter-spacing:1px; border-bottom: 1px solid rgba(139,0,0,0.1); }
+    
+    /* YENI SPOTIFY CONTAINER STYLES */
+    #spotify-container { background: rgba(8,2,2,0.95); border-bottom: 1px solid rgba(139,0,0,0.25); padding: 8px 12px; display: none; flex-direction: column; gap: 6px; }
+    #spotify-container.active { display: flex; }
+    .spot-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: #666; }
+    .spot-close { background: none; border: none; color: #8b0000; cursor: pointer; font-size: 0.85rem; font-weight: bold; }
+    #spotify-player-frame { border: none; border-radius: 8px; background: #000; filter: grayscale(0.2) sepia(0.1) hue-rotate(-50deg); }
+
     #messages { flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:6px; overscroll-behavior:contain; }
     .msg { display:flex; flex-direction:column; gap:2px; max-width:80%; position:relative; animation:msgIn 0.25s ease; }
     @keyframes msgIn { from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none} }
@@ -106,30 +112,15 @@
     .msg.mine.show-delete .delete-btn { display:flex; }
     .deleted-text { font-style:italic; color:#444 !important; font-size:0.85rem; }
     .system-msg { text-align:center; font-size:0.74rem; color:#444; padding:2px 10px; border-radius:10px; align-self:center; margin:3px 0; }
-    .audio-bubble { display:flex; align-items:center; gap:8px; padding:8px 12px; border-radius:16px; background:rgba(20,10,10,0.85); border:1px solid rgba(139,0,0,0.15); min-width:180px; }
-    .msg.mine .audio-bubble { background:linear-gradient(135deg,var(--accent-dark),#200000); border:none; }
-    .play-btn { width:36px; height:36px; border-radius:50%; border:none; background:var(--accent); color:white; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; }
-    .audio-info { display:flex; flex-direction:column; flex:1; gap:2px; }
-    .audio-label { font-size:0.82rem; color:#aaa; }
-    .audio-duration { font-size:0.7rem; color:#777; }
-    .audio-progress-bar { height:3px; background:rgba(255,255,255,0.05); border-radius:2px; margin-top:4px; overflow:hidden; }
-    .audio-progress-fill { height:100%; background:var(--accent-light); width:0%; border-radius:2px; }
-    .file-bubble { display:flex; align-items:center; gap:8px; padding:8px 12px; border-radius:16px; background:rgba(20,10,10,0.85); min-width:160px; text-decoration:none; border:1px solid rgba(139,0,0,0.15); }
-    .msg.mine .file-bubble { background:linear-gradient(135deg,var(--accent-dark),#200000); border:none; }
-    .file-icon { font-size:1.4rem; flex-shrink:0; filter: grayscale(1) sepia(1) hue-rotate(-50deg); }
-    .file-name { font-size:0.82rem; color:#ccc; word-break:break-all; }
-    .msg-img { max-width:220px; max-height:220px; border-radius:12px; display:block; cursor:pointer; object-fit:cover; box-shadow:0 4px 16px rgba(0,0,0,0.6); border: 1px solid rgba(139,0,0,0.2); }
-    .msg-video { max-width:220px; border-radius:12px; display:block; border: 1px solid rgba(139,0,0,0.2); }
-    #typing-status { text-align:center; font-size:0.75rem; color:#555; padding:2px 12px; min-height:18px; flex-shrink:0; }
-    #upload-status { text-align:center; font-size:0.75rem; color:var(--accent-light); padding:4px; display:none; flex-shrink:0; }
     
     /* INPUT ALANI */
     #input-area { padding:10px 12px; background:rgba(12,3,3,0.95); backdrop-filter:blur(12px); border-top:1px solid rgba(139,0,0,0.2); display:flex; gap:8px; align-items:center; flex-shrink:0; }
     #msg-input { flex:1; padding:11px 16px; border-radius:24px; -webkit-appearance:none; appearance:none; border:1px solid rgba(139,0,0,0.25); background:rgba(5,5,5,0.9); color:#fff; font-size:1rem; outline:none; transition:border-color 0.2s; }
     #msg-input:focus { border-color:var(--accent-light); }
-    #send-btn,#mic-btn,#file-btn,#emoji-btn { width:44px; height:44px; border-radius:50%; border:none; color:#fff; font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    #send-btn,#mic-btn,#file-btn,#emoji-btn,#spot-share-btn { width:44px; height:44px; border-radius:50%; border:none; color:#fff; font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
     #send-btn { background:linear-gradient(135deg,var(--accent),var(--accent-dark)); box-shadow:0 2px 12px rgba(74,0,0,0.4); }
-    #mic-btn,#file-btn,#emoji-btn { background:rgba(20,5,5,0.6); border:1px solid rgba(139,0,0,0.2); font-size:1.2rem; color: #888; }
+    #mic-btn,#file-btn,#emoji-btn,#spot-share-btn { background:rgba(20,5,5,0.6); border:1px solid rgba(139,0,0,0.2); font-size:1.2rem; color: #888; }
+    #spot-share-btn:hover { color: #1DB954; border-color: rgba(29,185,84,0.4); }
     #mic-btn.recording { background:#ff0000; border-color:#ff0000; animation:blink 0.8s infinite; color:#fff; }
     
     #emoji-panel { display:none; position:fixed; bottom:70px; left:0; right:0; background:rgba(12,3,3,0.98); backdrop-filter:blur(16px); border-top:1px solid rgba(139,0,0,0.25); padding:10px; z-index:50; max-height:220px; overflow-y:auto; }
@@ -173,21 +164,6 @@
     .admin-room-header { display:flex; align-items:center; gap:8px; }
     .admin-room-id { font-size:0.72rem; color:#555; background:rgba(255,255,255,0.02); padding:2px 8px; border-radius:6px; }
     .admin-room-online { font-size:0.75rem; color:var(--accent-light); margin-left:auto; }
-    .admin-room-fields { display:flex; gap:8px; }
-    .admin-room-fields input { flex:1; padding:8px 12px; border-radius:10px; border:1px solid rgba(139,0,0,0.2); background:rgba(5,5,5,0.9); color:#fff; font-size:0.88rem; outline:none; }
-    .admin-room-fields input:focus { border-color:var(--accent-light); }
-    .admin-room-actions { display:flex; gap:6px; flex-wrap:wrap; }
-    .admin-room-actions button { flex:1; padding:8px 6px; border-radius:10px; border:none; font-size:0.8rem; font-weight:600; cursor:pointer; min-width:60px; }
-    .btn-save { background:linear-gradient(135deg,var(--accent),var(--accent-dark)); color:#fff; }
-    .btn-clear { background:rgba(139,0,0,0.1); border:1px solid rgba(139,0,0,0.25) !important; color:#ff4d4d; }
-    .btn-delete { background:rgba(50,0,0,0.2); border:1px solid rgba(255,0,0,0.15) !important; color:#ff3333; }
-    .admin-add-section { background:rgba(15,5,5,0.7); border:1px solid rgba(139,0,0,0.2); border-radius:14px; padding:14px; display:flex; flex-direction:column; gap:10px; }
-    .admin-add-section input { padding:10px 14px; border-radius:10px; border:1px solid rgba(139,0,0,0.2); background:rgba(5,5,5,0.9); color:#fff; font-size:0.9rem; outline:none; width:100%; }
-    .admin-add-section input:focus { border-color:var(--accent-light); }
-    #admin-msg { font-size:0.8rem; color:var(--accent-light); text-align:center; min-height:18px; }
-    #admin-header { display:flex; align-items:center; justify-content:space-between; padding:10px 16px; background:rgba(12,3,3,0.95); border-bottom:1px solid rgba(139,0,0,0.2); flex-shrink:0; }
-    #admin-header span { font-size:0.9rem; font-weight:700; color:var(--accent-light); }
-    #admin-logout-btn { background:none; border:1px solid rgba(139,0,0,0.25); color:#666; border-radius:8px; padding:5px 12px; font-size:0.8rem; cursor:pointer; }
   </style>
 </head>
 <body>
@@ -204,7 +180,6 @@
   </div>
 </header>
 
-<!-- AYARLAR PANELİ (Renk Seçimi Tamamen Kaldırıldı, Sadece 3 Pro Kasvetli Animasyon ve Sesler Bırakıldı) -->
 <div id="settings-panel">
   <div class="sp-label">Kasvet Vibe Animasyonu</div>
   <div class="anim-row">
@@ -213,24 +188,8 @@
     <button class="anim-btn" data-anim="gloom">🌧️ Gloom (Gözyaşı Yağmuru)</button>
     <button class="anim-btn" data-anim="none">✕ Kapalı</button>
   </div>
-  <div class="sp-label">Sesler</div>
-  <div class="sound-toggle-row">
-    <span>Mesaj sesi</span>
-    <div class="toggle-wrap">
-      <button class="snd-btn active" data-snd="msg" data-val="on">Açık</button>
-      <button class="snd-btn off" data-snd="msg" data-val="off">Kapalı</button>
-    </div>
-  </div>
-  <div class="sound-toggle-row">
-    <span>Katılım sesi</span>
-    <div class="toggle-wrap">
-      <button class="snd-btn active" data-snd="join" data-val="on">Açık</button>
-      <button class="snd-btn off" data-snd="join" data-val="off">Kapalı</button>
-    </div>
-  </div>
 </div>
 
-<!-- ODA SEÇİM -->
 <div id="room-select-screen">
   <div class="room-select-card">
     <div class="room-select-title">laviva</div>
@@ -239,117 +198,67 @@
   </div>
 </div>
 
-<!-- ŞİFRE + NİCK -->
 <div id="lobby-screen">
   <div class="lobby-card">
     <div class="lobby-title">laviva</div>
     <div id="selected-room-name">Oda</div>
     <div class="lobby-sub">nick ve oda şifresini gir</div>
-    <input id="nick-input" type="text" placeholder="nick..." maxlength="30" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+    <input id="nick-input" type="text" placeholder="nick..." maxlength="30" autocomplete="off" />
     <input id="room-pass-input" type="password" placeholder="şifre..." autocomplete="off" />
     <button id="join-btn">Katıl</button>
     <div id="lobby-error"></div>
   </div>
 </div>
 
-<!-- BAĞLANIYOR -->
 <div id="connecting-screen"><div class="spinner"></div><p>Bağlanıyor...</p></div>
 
-<!-- CHAT -->
 <div id="chat-screen">
   <div id="room-label"></div>
+  
+  <div id="spotify-container">
+    <div class="spot-header">
+      <span>🎵 Birlikte Dinlenen Şarkı</span>
+      <button class="spot-close" id="spot-close-btn">✕ Kapat</button>
+    </div>
+    <iframe id="spotify-player-frame" src="" width="100%" height="80" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+  </div>
+
   <div id="messages"></div>
   <div id="typing-status"></div>
   <div id="upload-status">⏳ Yükleniyor...</div>
-  <div id="emoji-panel">
-    <div id="emoji-panel-header"><span>Emoji seç</span><button id="emoji-close">✕</button></div>
-    <div id="emoji-grid"></div>
-  </div>
+  
   <div id="input-area">
     <button id="file-btn">📎</button>
     <button id="mic-btn">🎤</button>
-    <button id="emoji-btn">😊</button>
-    <input id="msg-input" type="text" placeholder="Mesaj yaz..." maxlength="500" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+    <button id="spot-share-btn" title="Spotify'da Birlikte Dinle">🎵</button>
+    <input id="msg-input" type="text" placeholder="Mesaj yaz..." maxlength="500" autocomplete="off" />
     <button id="send-btn">➤</button>
   </div>
 </div>
 
-<!-- KAPANIŞ -->
 <div id="closed-screen">
   <div class="closed-card">
     <div class="closed-heart">🖤</div>
     <div class="closed-title">laviva</div>
-    <div class="closed-line"></div>
-    <div class="closed-subtitle">Bir dönem burada konuştuk, güldük, vakit geçirdik.<br><br>Her şeyin bir sonu var.<br>Bu da bizim sonumuzdu.<br><br>Ama buradaki anlar,<br>bir yerlerde hâlâ yaşıyor.</div>
-    <div class="closed-line"></div>
-    <div class="closed-date">31 Aralık 2030 · 23:59</div>
   </div>
 </div>
 
-<!-- ADMİN -->
-<div id="admin-screen">
-  <div id="admin-login">
-    <div class="admin-card">
-      <div class="admin-title">🔐 Admin</div>
-      <input id="admin-user-input" class="admin-input" type="text" placeholder="Kullanıcı adı" autocomplete="off" />
-      <input id="admin-pass-input" class="admin-input" type="password" placeholder="Şifre" />
-      <button id="admin-login-btn" class="admin-btn">Giriş Yap</button>
-      <div id="admin-login-error"></div>
-    </div>
-  </div>
-  <div id="admin-panel">
-    <div id="admin-header">
-      <span>⚙️ Yönetici Paneli</span>
-      <button id="admin-logout-btn">Çıkış</button>
-    </div>
-    <div id="admin-panel-inner">
-      <div class="admin-section-title">Odalar</div>
-      <div id="admin-rooms-list"></div>
-      <div class="admin-section-title">Yeni Oda</div>
-      <div class="admin-add-section">
-        <input id="new-room-name" placeholder="Oda adı..." />
-        <input id="new-room-pass" type="password" placeholder="Şifre..." />
-        <button class="admin-btn" id="add-room-btn">+ Oda Ekle</button>
-      </div>
-      <div id="admin-msg"></div>
-    </div>
-  </div>
-</div>
-
-<input type="file" id="file-input" accept="image/*,video/*,application/pdf,.doc,.docx,.txt" style="display:none" />
 <script>
-// ── SABITLER & DURUM ──────────────────────────────────────────────────────────
 const NICK_KEY    = 'laviva_nick';
 const ANIM_KEY    = 'laviva_anim';
-const SND_KEY     = 'laviva_snd';
 const PASS_KEY    = 'laviva_passes';
 
 let nick           = localStorage.getItem(NICK_KEY) || '';
 let ws             = null;
 let selectedRoomId = null;
-let mediaRecorder  = null, audioChunks = [], isRecording = false;
-let typingTimeout  = null;
-let unreadCount    = 0, pageVisible = true;
-let currentAudio   = null, currentPlayBtn = null, currentFill = null;
-let SHUTDOWN_TIME  = new Date('2030-12-31T23:59:59+03:00').getTime();
-let isClosed       = false;
-let adminToken     = sessionStorage.getItem('laviva_admin_token') || null;
-let currentAnim    = localStorage.getItem(ANIM_KEY) || 'bleeding'; // Varsayılan artık Bleeding oldu
+let currentAnim    = localStorage.getItem(ANIM_KEY) || 'bleeding';
 let animFrame      = null;
-let reconnectTimer = null;
-
-let sndSettings = JSON.parse(localStorage.getItem(SND_KEY) || '{"msg":true,"join":true}');
 let savedPasses = JSON.parse(localStorage.getItem(PASS_KEY) || '{}');
 
-// ── DOM REFS ──────────────────────────────────────────────────────────────────
 const roomSelectScreen = document.getElementById('room-select-screen');
 const lobbyScreen      = document.getElementById('lobby-screen');
 const connectingScreen = document.getElementById('connecting-screen');
 const chatScreen       = document.getElementById('chat-screen');
-const closedScreen     = document.getElementById('closed-screen');
-const adminScreen      = document.getElementById('admin-screen');
-const adminLogin       = document.getElementById('admin-login');
-const adminPanelEl     = document.getElementById('admin-panel');
 const nickInput        = document.getElementById('nick-input');
 const roomPassInput    = document.getElementById('room-pass-input');
 const joinBtn          = document.getElementById('join-btn');
@@ -358,564 +267,175 @@ const selectedRoomName = document.getElementById('selected-room-name');
 const messagesEl       = document.getElementById('messages');
 const msgInput         = document.getElementById('msg-input');
 const sendBtn          = document.getElementById('send-btn');
-const micBtn           = document.getElementById('mic-btn');
-const fileBtn          = document.getElementById('file-btn');
-const fileInput        = document.getElementById('file-input');
-const emojiBtn         = document.getElementById('emoji-btn');
-const emojiPanel       = document.getElementById('emoji-panel');
-const emojiGrid        = document.getElementById('emoji-grid');
-const emojiClose       = document.getElementById('emoji-close');
-const uploadStatus     = document.getElementById('upload-status');
-const typingStatus     = document.getElementById('typing-status');
-const onlineNum        = document.getElementById('online-num');
-const onlineList       = document.getElementById('online-list');
-const statusDot        = document.getElementById('status-dot');
-const lightbox         = document.getElementById('lightbox');
-const lightboxImg      = document.getElementById('lightbox-img');
-const lightboxClose    = document.getElementById('lightbox-close');
-const settingsBtn      = document.getElementById('settings-btn');
-const settingsPanel    = document.getElementById('settings-panel');
-const soundBtn         = document.getElementById('sound-btn');
-const backBtn          = document.getElementById('back-btn');
-const roomLabel        = document.getElementById('room-label');
+const spotShareBtn     = document.getElementById('spot-share-btn');
+const spotifyContainer = document.getElementById('spotify-container');
+const spotifyFrame     = document.getElementById('spotify-player-frame');
+const spotCloseBtn     = document.getElementById('spot-close-btn');
 const roomsGrid        = document.getElementById('rooms-grid');
-const onlineCount      = document.getElementById('online-count');
+const backBtn          = document.getElementById('back-btn');
 
-// ── EKRAN KONTROLLERİ ─────────────────────────────────────────────────────────
-const ALL_SCREENS = [roomSelectScreen,lobbyScreen,connectingScreen,chatScreen,closedScreen,adminScreen];
 function showScreen(name) {
-  ALL_SCREENS.forEach(s => { if(s) s.style.display='none'; });
+  [roomSelectScreen,lobbyScreen,connectingScreen,chatScreen].forEach(s => s.style.display='none');
   backBtn.style.display='none';
-  onlineCount.style.display='none';
-  if (name==='room-select') { roomSelectScreen.style.display='flex'; }
+  if (name==='room-select') roomSelectScreen.style.display='flex';
   else if (name==='lobby')  { lobbyScreen.style.display='flex'; backBtn.style.display='flex'; }
   else if (name==='connecting') { connectingScreen.style.display='flex'; backBtn.style.display='flex'; }
-  else if (name==='chat')   { chatScreen.style.display='flex'; backBtn.style.display='flex'; onlineCount.style.display='flex'; setTimeout(scrollBottom,100); }
-  else if (name==='closed') { closedScreen.style.display='flex'; }
-  else if (name==='admin')  { adminScreen.style.display='flex'; }
+  else if (name==='chat')   { chatScreen.style.display='flex'; backBtn.style.display='flex'; }
 }
 
 backBtn.addEventListener('click', () => {
-  if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer=null; }
-  if (chatScreen.style.display==='flex' || connectingScreen.style.display==='flex') {
-    if (ws) { ws.onclose=null; ws.close(); ws=null; }
-    showScreen('room-select'); loadRooms();
-  } else if (lobbyScreen.style.display==='flex' || adminScreen.style.display==='flex') {
-    showScreen('room-select');
-  }
+  if (ws) { ws.close(); ws=null; }
+  showScreen('room-select'); loadRooms();
 });
 
-// LOGO TIKLA → ADMİN
-const logoTitle = document.getElementById('logo-title');
-logoTitle.style.cursor = 'pointer';
-logoTitle.addEventListener('click', () => { openAdminScreen(); });
-
-function openAdminScreen() {
-  showScreen('admin');
-  backBtn.style.display='flex';
-  adminLogin.style.display='flex';
-  adminPanelEl.classList.remove('active');
-  adminPanelEl.style.display='none';
-  if (adminToken) { adminLogin.style.display='none'; adminPanelEl.style.display='flex'; adminPanelEl.classList.add('active'); loadAdminRooms(); }
-}
-
-// ── SES AYARLARI ──────────────────────────────────────────────────────────────
-function saveSnd() { localStorage.setItem(SND_KEY, JSON.stringify(sndSettings)); }
-function updateSndUI() {
-  document.querySelectorAll('.snd-btn').forEach(btn => {
-    const type = btn.dataset.snd, val = btn.dataset.val;
-    const isActive = (val==='on' && sndSettings[type]) || (val==='off' && !sndSettings[type]);
-    btn.classList.toggle('active', isActive);
-  });
-  const allMuted = !sndSettings.msg && !sndSettings.join;
-  soundBtn.textContent = allMuted ? '🔕' : '🔔';
-  soundBtn.classList.toggle('muted', allMuted);
-}
-document.querySelectorAll('.snd-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    sndSettings[btn.dataset.snd] = (btn.dataset.val==='on');
-    saveSnd(); updateSndUI();
-  });
-});
-soundBtn.addEventListener('click', e => {
-  e.stopPropagation();
-  const allMuted = !sndSettings.msg && !sndSettings.join;
-  sndSettings.msg = sndSettings.join = allMuted;
-  saveSnd(); updateSndUI();
-});
-updateSndUI();
-
-// AYARLAR PANELİ
-settingsBtn.addEventListener('click', e => { e.stopPropagation(); settingsPanel.classList.toggle('open'); emojiPanel.classList.remove('open'); });
-document.addEventListener('click', () => { settingsPanel.classList.remove('open'); });
-settingsPanel.addEventListener('click', e => e.stopPropagation());
-
-// ANİMASYON SEÇİMİ
-document.querySelectorAll('.anim-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    currentAnim = btn.dataset.anim;
-    localStorage.setItem(ANIM_KEY, currentAnim);
-    document.querySelectorAll('.anim-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    startAnim(currentAnim);
-  });
-});
-document.querySelectorAll('.anim-btn').forEach(b => b.classList.remove('active'));
-const initialAnimBtn = document.querySelector(`.anim-btn[data-anim="${currentAnim}"]`);
-if (initialAnimBtn) initialAnimBtn.classList.add('active');
-  // ── NEW PRO KASVETLI CANVAS ANIMASYONLARI ─────────────────────────────────────
+// ── FIXED CANVAS ANIMASYON DÖNGÜSÜ (Tek Tek Çalışma Garantili) ─────────────────
 const canvas = document.getElementById('bg-canvas');
 const ctx    = canvas.getContext('2d');
 let W, H;
 function resize() { W=canvas.width=innerWidth; H=canvas.height=innerHeight; }
 resize(); window.addEventListener('resize', resize);
 
-// 1. PRO ANIMASYON: BLEEDING (Ağır ağır yukarıdan süzülen kan damlaları)
-function animBleeding() {
-  const drops = Array.from({length:35}, () => ({
-    x: Math.random() * W,
-    y: Math.random() * H - H,
-    len: Math.random() * 25 + 10,
-    speed: Math.random() * 0.4 + 0.1, // Çok yavaş, ağır akış
-    w: Math.random() * 2 + 1,
-    alpha: Math.random() * 0.4 + 0.2
-  }));
-  function draw() {
-    animFrame = requestAnimationFrame(draw);
-    ctx.fillStyle = 'rgba(5, 5, 5, 0.08)'; // İzi kalsın diye hafif opak siyah
-    ctx.fillRect(0,0,W,H);
-    drops.forEach(d => {
-      ctx.beginPath();
-      ctx.moveTo(d.x, d.y);
-      ctx.lineTo(d.x, d.y + d.len);
-      ctx.strokeStyle = `rgba(139, 0, 0, ${d.alpha})`;
-      ctx.lineWidth = d.w;
-      ctx.lineCap = 'round';
-      ctx.stroke();
-      
-      // Damla ucu yuvarlağı (estetik süzülme için)
-      ctx.beginPath();
-      ctx.arc(d.x, d.y + d.len, d.w * 1.2, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(100, 0, 0, ${d.alpha + 0.1})`;
-      ctx.fill();
+let activeDrops = [], activeClouds = [], activeTears = [];
 
-      d.y += d.speed;
-      if (d.y > H) {
-        d.y = -d.len;
-        d.x = Math.random() * W;
-        d.speed = Math.random() * 0.4 + 0.1;
-      }
-    });
-  }
-  draw();
+function initBleeding() {
+  activeDrops = Array.from({length:35}, () => ({
+    x: Math.random() * W, y: Math.random() * H - H,
+    len: Math.random() * 25 + 10, speed: Math.random() * 0.4 + 0.1,
+    w: Math.random() * 2 + 1, alpha: Math.random() * 0.4 + 0.2
+  }));
+}
+function drawBleeding() {
+  animFrame = requestAnimationFrame(drawBleeding);
+  ctx.fillStyle = 'rgba(5, 5, 5, 0.08)';
+  ctx.fillRect(0,0,W,H);
+  activeDrops.forEach(d => {
+    ctx.beginPath(); ctx.moveTo(d.x, d.y); ctx.lineTo(d.x, d.y + d.len);
+    ctx.strokeStyle = `rgba(139, 0, 0, ${d.alpha})`; ctx.lineWidth = d.w; ctx.stroke();
+    d.y += d.speed;
+    if (d.y > H) { d.y = -d.len; d.x = Math.random() * W; }
+  });
 }
 
-// 2. PRO ANIMASYON: MELANCHOLY (Ekranda daraltıcı, yavaş dönen puslu siyah/gri duman odaklar)
-function animMelancholy() {
-  const clouds = Array.from({length:15}, () => ({
-    x: Math.random() * W,
-    y: Math.random() * H,
-    r: Math.random() * 100 + 80,
-    vx: (Math.random() - 0.5) * 0.15,
-    vy: (Math.random() - 0.5) * 0.15,
-    alpha: Math.random() * 0.12 + 0.03,
-    grow: (Math.random() - 0.5) * 0.05
+function initMelancholy() {
+  activeClouds = Array.from({length:15}, () => ({
+    x: Math.random() * W, y: Math.random() * H, r: Math.random() * 100 + 80,
+    vx: (Math.random() - 0.5) * 0.15, vy: (Math.random() - 0.5) * 0.15,
+    alpha: Math.random() * 0.12 + 0.03, grow: (Math.random() - 0.5) * 0.05
   }));
-  function draw() {
-    animFrame = requestAnimationFrame(draw);
-    ctx.clearRect(0,0,W,H);
-    clouds.forEach(c => {
-      let grad = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, c.r);
-      grad.addColorStop(0, `rgba(20, 3, 3, ${c.alpha})`);
-      grad.addColorStop(0.5, `rgba(10, 10, 10, ${c.alpha * 0.5})`);
-      grad.addColorStop(1, 'rgba(5, 5, 5, 0)');
-      
-      ctx.beginPath();
-      ctx.arc(c.x, c.y, c.r, 0, Math.PI*2);
-      ctx.fillStyle = grad;
-      ctx.fill();
-
-      c.x += c.vx; c.y += c.vy;
-      c.r += c.grow;
-      if(c.r > 200 || c.r < 60) c.grow *= -1;
-      if(c.x < -c.r) c.x = W + c.r; if(c.x > W + c.r) c.x = -c.r;
-      if(c.y < -c.r) c.y = H + c.r; if(c.y > H + c.r) c.y = -c.r;
-    });
-  }
-  draw();
+}
+function drawMelancholy() {
+  animFrame = requestAnimationFrame(drawMelancholy);
+  ctx.clearRect(0,0,W,H);
+  activeClouds.forEach(c => {
+    let grad = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, c.r);
+    grad.addColorStop(0, `rgba(20, 3, 3, ${c.alpha})`);
+    grad.addColorStop(1, 'rgba(5, 5, 5, 0)');
+    ctx.beginPath(); ctx.arc(c.x, c.y, c.r, 0, Math.PI*2);
+    ctx.fillStyle = grad; ctx.fill();
+    c.x += c.vx; c.y += c.vy; c.r += c.grow;
+    if(c.r > 200 || c.r < 60) c.grow *= -1;
+    if(c.x < -c.r) c.x = W + c.r; if(c.x > W + c.r) c.x = -c.r;
+  });
 }
 
-// 3. PRO ANIMASYON: GLOOM (Kasvetli, loş koyu kırmızı gözyaşı yağmuru çizgileri)
-function animGloom() {
-  const tears = Array.from({length:60}, () => ({
-    x: Math.random() * W,
-    y: Math.random() * H,
-    length: Math.random() * 15 + 5,
-    speed: Math.random() * 1.5 + 0.5,
-    opacity: Math.random() * 0.25 + 0.05
+function initGloom() {
+  activeTears = Array.from({length:60}, () => ({
+    x: Math.random() * W, y: Math.random() * H,
+    length: Math.random() * 15 + 5, speed: Math.random() * 1.5 + 0.5, opacity: Math.random() * 0.25 + 0.05
   }));
-  function draw() {
-    animFrame = requestAnimationFrame(draw);
-    ctx.clearRect(0,0,W,H);
-    ctx.lineWidth = 1;
-    tears.forEach(t => {
-      ctx.beginPath();
-      ctx.moveTo(t.x, t.y);
-      ctx.lineTo(t.x, t.y + t.length);
-      ctx.strokeStyle = `rgba(180, 20, 20, ${t.opacity})`;
-      ctx.stroke();
-
-      t.y += t.speed;
-      if (t.y > H) {
-        t.y = -t.length;
-        t.x = Math.random() * W;
-      }
-    });
-  }
-  draw();
+}
+function drawGloom() {
+  animFrame = requestAnimationFrame(drawGloom);
+  ctx.clearRect(0,0,W,H);
+  activeTears.forEach(t => {
+    ctx.beginPath(); ctx.moveTo(t.x, t.y); ctx.lineTo(t.x, t.y + t.length);
+    ctx.strokeStyle = `rgba(180, 20, 20, ${t.opacity})`; ctx.stroke();
+    t.y += t.speed; if (t.y > H) { t.y = -t.length; t.x = Math.random() * W; }
+  });
 }
 
 function startAnim(name) {
-  if (animFrame) { cancelAnimationFrame(animFrame); animFrame=null; ctx.clearRect(0,0,W,H); }
-  if (name==='bleeding') animBleeding();
-  else if (name==='melancholy') animMelancholy();
-  else if (name==='gloom') animGloom();
+  if (animFrame) { cancelAnimationFrame(animFrame); animFrame = null; }
+  ctx.clearRect(0, 0, W, H);
+  if (name === 'bleeding') { initBleeding(); drawBleeding(); }
+  else if (name === 'melancholy') { initMelancholy(); drawMelancholy(); }
+  else if (name === 'gloom') { initGloom(); drawGloom(); }
 }
 startAnim(currentAnim);
 
-// ── ODALAR ───────────────────────────────────────────────────────────────────
-const ROOM_ICONS = ['🖤','⛓️','🩸','👁️','🕸️','🥀','🎭','💀'];
+document.querySelectorAll('.anim-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    currentAnim = btn.dataset.anim; localStorage.setItem(ANIM_KEY, currentAnim);
+    document.querySelectorAll('.anim-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active'); startAnim(currentAnim);
+  });
+});
+
+// ── MÜZİK PAYLAŞIM VE SENKRONİZASYON TETİKLEYİCİLERİ ──────────────────────────
+spotShareBtn.addEventListener('click', () => {
+  const url = prompt("Spotify Paylaşım Linkini Gir (Şarkı, Albüm veya Çalma Listesi):");
+  if(!url) return;
+  
+  // Spotify URL'ini embed koduna dönüştürme regex'i
+  let embedUrl = "";
+  if(url.includes("spotify.com")) {
+    embedUrl = url.replace("spotify.com/", "spotify.com/embed/");
+    // Eğer linkte filtre/track argümanı varsa temizleyelim
+    if(embedUrl.includes("?si=")) {
+      embedUrl = embedUrl.split("?si=")[0];
+    }
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({ type: 'spotify-sync', url: embedUrl }));
+    }
+  } else {
+    alert("Geçersiz Spotify linki!");
+  }
+});
+
+spotCloseBtn.addEventListener('click', () => {
+  spotifyContainer.classList.remove('active');
+  spotifyFrame.src = "";
+});
+// ── ODALAR & CHAT BAĞLANTISI ──────────────────────────────────────────────────
 async function loadRooms() {
   try {
-    const res = await fetch('/rooms');
-    const rooms = await res.json();
+    const res = await fetch('/rooms'); const rooms = await res.json();
     roomsGrid.innerHTML = '';
     rooms.forEach((r, i) => {
-      const hasSaved = !!savedPasses[r.id];
-      const btn = document.createElement('button');
-      btn.className = 'room-btn';
-      btn.innerHTML = `<span class="room-icon">${ROOM_ICONS[i%ROOM_ICONS.length]}</span><span class="room-name">${escapeHtml(r.name)}</span>${hasSaved?'<span class="room-saved">✓ kayıtlı</span>':'<span class="room-lock">🔒</span>'}`;
-      btn.addEventListener('click', () => selectRoom(r.id, r.name));
+      const btn = document.createElement('button'); btn.className = 'room-btn';
+      btn.innerHTML = `<span class="room-name">${r.name}</span>`;
+      btn.addEventListener('click', () => { selectedRoomId = r.id; showScreen('lobby'); });
       roomsGrid.appendChild(btn);
     });
-  } catch(e) { roomsGrid.innerHTML='<div style="color:#444;font-size:0.85rem;text-align:center">Yüklenemedi</div>'; }
+  } catch(e){}
 }
 
-async function selectRoom(id, name) {
-  selectedRoomId = id;
-  selectedRoomName.textContent = name;
-  lobbyError.textContent = '';
-  nickInput.value = localStorage.getItem(NICK_KEY) || '';
-  roomPassInput.value = '';
-  const saved = savedPasses[id];
-  if (saved) {
-    const n = nickInput.value.trim() || nick;
-    if (!n) { showScreen('lobby'); setTimeout(()=>nickInput.focus(),200); return; }
-    showScreen('connecting');
-    const ok = await tryAutoJoin(id, n, saved);
-    if (ok) return;
-    delete savedPasses[id];
-    localStorage.setItem(PASS_KEY, JSON.stringify(savedPasses));
-    showScreen('lobby');
-    roomPassInput.value = '';
-    lobbyError.textContent = 'Kayıtlı şifre geçersiz, lütfen tekrar gir';
-    setTimeout(()=>roomPassInput.focus(),200);
-  } else {
-    showScreen('lobby');
-    setTimeout(()=>nickInput.value?roomPassInput.focus():nickInput.focus(), 200);
-  }
-}
-
-async function tryAutoJoin(roomId, tryNick, pass) {
-  try {
-    const res = await fetch('/verify-room',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({roomId,password:pass})});
-    const data = await res.json();
-    if (!data.ok) return false;
-    nick = tryNick;
-    localStorage.setItem(NICK_KEY, nick);
-    connectChat(roomId, pass);
-    return true;
-  } catch(e) { return false; }
-}
-
-// ── BAĞLANTI ──────────────────────────────────────────────────────────────────
 function connectChat(roomId, password) {
-  if (isClosed) return;
-  if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer=null; }
-  showScreen('connecting'); setStatus('yellow');
   const proto = location.protocol==='https:'?'wss':'ws';
   ws = new WebSocket(`${proto}://${location.host}`);
-  ws.onopen = () => { setStatus('green'); ws.send(JSON.stringify({type:'join',nick,roomId,password})); };
+  ws.onopen = () => { ws.send(JSON.stringify({type:'join',nick,roomId,password})); };
   ws.onmessage = (e) => {
     const data = JSON.parse(e.data);
-    if (data.type==='error') {
-      setStatus('red'); if(ws){ws.onclose=null;ws.close();ws=null;}
-      lobbyError.textContent = data.text||'Hata';
-      showScreen('lobby'); return;
+    if (data.type==='history') showScreen('chat');
+    else if (data.type==='message') {
+      const div = document.createElement('div'); div.className = 'msg';
+      div.innerHTML = `<span class="msg-bubble">${data.message.text}</span>`;
+      messagesEl.appendChild(div);
     }
-    if (data.type==='history') {
-      roomLabel.textContent = selectedRoomName.textContent;
-      showScreen('chat'); setTimeout(()=>msgInput.focus(),300);
-      messagesEl.innerHTML='';
-      data.messages.forEach(m=>addMessage(m,m.nick===nick,true));
-      savedPasses[roomId]=password;
-      localStorage.setItem(PASS_KEY,JSON.stringify(savedPasses));
-      loadRooms();
-    }
-    else if (data.type==='shutdown')  { SHUTDOWN_TIME=data.shutdownTime; }
-    else if (data.type==='message')   { addMessage(data.message,data.message.nick===nick); }
-    else if (data.type==='deleted')   {
-      const el=document.querySelector(`[data-id="${data.id}"]`);
-      if(el){const n=el.querySelector('.msg-nick');const t=el.querySelector('.msg-time');el.innerHTML=`${n?`<span class="msg-nick">${escapeHtml(n.textContent)}</span>`:''}<div class="msg-bubble deleted-text">Bu mesaj silindi</div>${t?`<span class="msg-time">${t.textContent}</span>`:''}`; el.classList.remove('show-delete');}
-    }
-    else if (data.type==='online')    { onlineNum.textContent=data.count; onlineList.textContent=data.users.join(', '); }
-    else if (data.type==='system')    { addSystemMsg(data.text,data.kind); }
-    else if (data.type==='typing')    { typingStatus.textContent=data.nick+' yazıyor...'; clearTimeout(typingTimeout); typingTimeout=setTimeout(()=>{typingStatus.textContent='';},2000); }
-  };
-  ws.onclose = () => {
-    setStatus('red');
-    if ((chatScreen.style.display==='flex' || connectingScreen.style.display==='flex') && !isClosed) {
-      reconnectTimer = setTimeout(()=>connectChat(roomId,password),2000);
+    // GERÇEK ZAMANLI SPOTIFY PAKET YAKALAYICI
+    else if (data.type === 'spotify-broadcast') {
+      spotifyFrame.src = data.url;
+      spotifyContainer.classList.add('active');
     }
   };
 }
 
-function enterChat() {
-  const n=nickInput.value.trim(), p=roomPassInput.value;
-  if (!n) { lobbyError.textContent='Nick boş olamaz'; return; }
-  if (!p) { lobbyError.textContent='Şifre boş olamaz'; return; }
-  nick=n; localStorage.setItem(NICK_KEY,nick);
-  lobbyError.textContent='';
-  connectChat(selectedRoomId, p);
-}
-joinBtn.addEventListener('click', enterChat);
-nickInput.addEventListener('keydown', e=>{ if(e.key==='Enter') roomPassInput.focus(); });
-roomPassInput.addEventListener('keydown', e=>{ if(e.key==='Enter') enterChat(); });
-
-// ── MESAJ GÖNDERİMİ ──────────────────────────────────────────────────────────
-function sendMessage() {
-  const text=msgInput.value.trim();
-  if (!text||!ws||ws.readyState!==WebSocket.OPEN) return;
-  ws.send(JSON.stringify({type:'chat',nick,text}));
-  msgInput.value=''; msgInput.focus(); emojiPanel.classList.remove('open');
-}
-msgInput.addEventListener('input',()=>{ if(!ws||ws.readyState!==WebSocket.OPEN)return; ws.send(JSON.stringify({type:'typing',nick})); });
-sendBtn.addEventListener('click', sendMessage);
-msgInput.addEventListener('keydown', e=>{ if(e.key==='Enter') sendMessage(); });
-
-// ── SES KAYIT ────────────────────────────────────────────────────────────────
-async function toggleRecording() {
-  if (isRecording) {
-    mediaRecorder.stop(); isRecording=false; micBtn.classList.remove('recording'); micBtn.textContent='🎤';
-  } else {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({audio:true});
-      audioChunks=[];
-      mediaRecorder=new MediaRecorder(stream);
-      mediaRecorder.ondataavailable=e=>audioChunks.push(e.data);
-      mediaRecorder.onstop=async()=>{
-        const blob=new Blob(audioChunks,{type:'audio/webm'}); stream.getTracks().forEach(t=>t.stop());
-        uploadStatus.style.display='block';
-        const reader=new FileReader();
-        reader.onload=async()=>{ try{ await fetch('/upload-audio',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({audio:reader.result,nick,roomId:selectedRoomId})}); }catch(e){alert('Ses gönderilemedi!');} finally{uploadStatus.style.display='none';} };
-        reader.readAsDataURL(blob);
-      };
-      mediaRecorder.start(); isRecording=true; micBtn.classList.add('recording'); micBtn.textContent='⏹';
-    } catch(e){ alert('Mikrofon izni gerekli!'); }
-  }
-}
-micBtn.addEventListener('click', toggleRecording);
-
-fileBtn.addEventListener('click',()=>fileInput.click());
-fileInput.addEventListener('change',async()=>{
-  const file=fileInput.files[0]; if(!file) return; fileInput.value='';
-  if(file.size>20*1024*1024){alert('Dosya 20MB\'dan büyük olamaz!');return;}
-  uploadStatus.style.display='block';
-  const reader=new FileReader();
-  reader.onload=async()=>{ try{ await fetch('/upload-file',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({file:reader.result,nick,fileType:file.type,fileName:file.name,roomId:selectedRoomId})}); }catch(e){alert('Dosya gönderilemedi!');} finally{uploadStatus.style.display='none';} };
-  reader.readAsDataURL(file);
+joinBtn.addEventListener('click', () => {
+  nick = nickInput.value.trim(); localStorage.setItem(NICK_KEY, nick);
+  connectChat(selectedRoomId, roomPassInput.value);
 });
 
-// ── EMOJİLER ─────────────────────────────────────────────────────────────────
-const EMOJIS=['😀','😂','😉','😊','😎','😍','🖤','🥀','🩸','👁️','⛓️','💀','🎪','🔮','🔕','🔔','🎵','💬','🏠','📌','📎','🎤','⏹','➤','✕','⚙️','🔐','💾','🗑','◀'];
-EMOJIS.forEach(em=>{
-  const span=document.createElement('span'); span.className='emoji-item'; span.textContent=em;
-  span.addEventListener('click',()=>{ const s=msgInput.selectionStart,e2=msgInput.selectionEnd; msgInput.value=msgInput.value.slice(0,s)+em+msgInput.value.slice(e2); msgInput.selectionStart=msgInput.selectionEnd=s+em.length; msgInput.focus(); });
-  emojiGrid.appendChild(span);
-});
-emojiBtn.addEventListener('click',e=>{ e.stopPropagation(); emojiPanel.classList.toggle('open'); settingsPanel.classList.remove('open'); });
-emojiClose.addEventListener('click',()=>emojiPanel.classList.remove('open'));
-
-// ── BİLDİRİM / SESLER ────────────────────────────────────────────────────────
-document.addEventListener('visibilitychange',()=>{ pageVisible=!document.hidden; if(pageVisible){unreadCount=0;document.title='Laviva';} });
-function notifyNewMessage(msg) {
-  if(pageVisible)return; unreadCount++; document.title=`(${unreadCount}) Laviva`;
-  if(navigator.vibrate)navigator.vibrate(100);
-  if(Notification.permission==='granted')new Notification('Laviva',{body:msg.nick+': '+(msg.audioUrl?'🎤':msg.fileUrl?'📎':msg.text)});
-}
-function playNotifSound() {
-  if(!sndSettings.msg)return;
-  try {
-    const ctx2=new(window.AudioContext||window.webkitAudioContext)();
-    const osc=ctx2.createOscillator(),gain=ctx2.createGain();
-    osc.connect(gain);gain.connect(ctx2.destination);
-    osc.type='sine'; osc.frequency.setValueAtTime(220,ctx2.currentTime); // Sesleri de daha pes/boğuk yaptık melankolik vibe için
-    gain.gain.setValueAtTime(0,ctx2.currentTime); gain.gain.linearRampToValueAtTime(0.1,ctx2.currentTime+0.01); gain.gain.exponentialRampToValueAtTime(0.001,ctx2.currentTime+0.4);
-    osc.start(ctx2.currentTime); osc.stop(ctx2.currentTime+0.4);
-  } catch(e){}
-}
-function playJoinSound() {
-  if(!sndSettings.join)return;
-  try {
-    const ctx2=new(window.AudioContext||window.webkitAudioContext)();
-    const osc=ctx2.createOscillator(),gain=ctx2.createGain();
-    osc.connect(gain);gain.connect(ctx2.destination);
-    osc.type='sine'; osc.frequency.setValueAtTime(180,ctx2.currentTime);
-    gain.gain.setValueAtTime(0,ctx2.currentTime); gain.gain.linearRampToValueAtTime(0.08,ctx2.currentTime+0.01); gain.gain.exponentialRampToValueAtTime(0.001,ctx2.currentTime+0.5);
-    osc.start(ctx2.currentTime); osc.stop(ctx2.currentTime+0.5);
-  } catch(e){}
-}
-if('Notification'in window&&Notification.permission==='default')setTimeout(()=>Notification.requestPermission(),3000);
-
-// ── AUDIO PLAYER ─────────────────────────────────────────────────────────────
-function toggleAudio(btn,url,fillEl,durationEl){
-  if(currentAudio&&currentPlayBtn===btn){currentAudio.pause();currentAudio.currentTime=0;currentAudio=null;currentPlayBtn=null;btn.textContent='▶';if(fillEl)fillEl.style.width='0%';return;}
-  if(currentAudio){currentAudio.pause();currentAudio.currentTime=0;if(currentPlayBtn)currentPlayBtn.textContent='▶';if(currentFill)currentFill.style.width='0%';}
-  const audio=new Audio(url);currentAudio=audio;currentPlayBtn=btn;currentFill=fillEl;btn.textContent='⏹';
-  audio.play().catch(()=>{btn.textContent='▶';});
-  audio.ontimeupdate=()=>{if(fillEl&&audio.duration)fillEl.style.width=(audio.currentTime/audio.duration*100)+'%';if(durationEl&&audio.duration){const r=Math.ceil(audio.duration-audio.currentTime);durationEl.textContent='0:'+String(r).padStart(2,'0');}};
-  audio.onended=()=>{btn.textContent='▶';if(fillEl)fillEl.style.width='0%';if(durationEl)durationEl.textContent='';currentAudio=null;currentPlayBtn=null;currentFill=null;};
-}
-lightboxClose.addEventListener('click',()=>lightbox.classList.remove('open'));
-lightbox.addEventListener('click',e=>{if(e.target===lightbox)lightbox.classList.remove('open');});
-
-// ── YARDIMCILAR ───────────────────────────────────────────────────────────────
-function scrollBottom(){messagesEl.scrollTop=messagesEl.scrollHeight;}
-function setStatus(s){statusDot.className=s;}
-function formatTime(iso){return new Date(iso).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});}
-function escapeHtml(str){return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-
-function addSystemMsg(text,kind){
-  const div=document.createElement('div');div.className='system-msg';
-  const nickPart=text.replace(' katıldı','').replace(' ayrıldı','');
-  const keyword=kind==='join'?' katıldı':' ayrıldı';
-  const color=kind==='join'?'#8b0000':'#444';
-  div.innerHTML=`<span style="color:#555">${escapeHtml(nickPart)}</span><span style="color:${color};font-weight:600">${keyword}</span>`;
-  messagesEl.appendChild(div);scrollBottom();
-  if(kind==='join')playJoinSound();
-}
-
-function getBubbleHtml(msg){
-  if(msg.deleted)return`<div class="msg-bubble deleted-text">Bu mesaj silindi</div>`;
-  if(msg.audioUrl)return`<div class="audio-bubble"><button class="play-btn" data-url="${escapeHtml(msg.audioUrl)}">▶</button><div class="audio-info"><span class="audio-label">Sesli mesaj</span><span class="audio-duration"></span><div class="audio-progress-bar"><div class="audio-progress-fill"></div></div></div></div>`;
-  if(msg.fileUrl){
-    if(msg.fileType?.startsWith('image/'))return`<img class="msg-img" src="${escapeHtml(msg.fileUrl)}" alt="foto"/>`;
-    if(msg.fileType?.startsWith('video/'))return`<video class="msg-video" src="${escapeHtml(msg.fileUrl)}" controls></video>`;
-    return`<a class="file-bubble" href="${escapeHtml(msg.fileUrl)}" target="_blank" rel="noopener"><span class="file-icon">📄</span><span class="file-name">${escapeHtml(msg.fileName||'Dosya')}</span></a>`;
-  }
-  return`<div class="msg-bubble">${escapeHtml(msg.text)}</div>`;
-}
-
-function addMessage(msg,isMine,isHistory){
-  const div=document.createElement('div');
-  div.className='msg '+(isMine?'mine':'other');
-  div.dataset.id=msg.id;div.dataset.nick=msg.nick;div.dataset.time=formatTime(msg.time);
-  const allMsgs=messagesEl.querySelectorAll('.msg');
-  const prev=allMsgs[allMsgs.length-1];
-  const sameGroup=prev&&prev.dataset.nick===msg.nick&&prev.dataset.time===formatTime(msg.time)&&!msg.deleted;
-  if(sameGroup){const pt=prev.querySelector('.msg-time');if(pt)pt.remove();}
-  const isMedia=!!(msg.audioUrl||(msg.fileUrl&&(msg.fileType?.startsWith('image/')||msg.fileType?.startsWith('video/'))));
-  if(isMine&&!msg.deleted&&isMedia) div.classList.add('show-delete');
-  div.innerHTML=`${sameGroup?'':`<span class="msg-nick">${escapeHtml(msg.nick)}</span>`}${getBubbleHtml(msg)}<span class="msg-time">${formatTime(msg.time)}</span>${isMine&&!msg.deleted?`<button class="delete-btn">✕</button>`:''}`;
-  const playBtn=div.querySelector('.play-btn');
-  if(playBtn){const fillEl=div.querySelector('.audio-progress-fill'),durEl=div.querySelector('.audio-duration');playBtn.addEventListener('click',e=>{e.stopPropagation();toggleAudio(playBtn,playBtn.dataset.url,fillEl,durEl);});}
-  const imgEl=div.querySelector('.msg-img');
-  if(imgEl)imgEl.addEventListener('click',()=>{lightboxImg.src=imgEl.src;lightbox.classList.add('open');});
-  const delBtn=div.querySelector('.delete-btn');
-  if(delBtn)delBtn.addEventListener('click',e=>{e.stopPropagation();ws.send(JSON.stringify({type:'delete',id:msg.id,nick}));});
-  if(isMine&&!msg.deleted&&!isMedia){
-    div.addEventListener('click',function(e){
-      if(e.target.classList.contains('delete-btn'))return;
-      document.querySelectorAll('.msg.mine').forEach(m=>m.classList.remove('show-delete'));
-      div.classList.toggle('show-delete');
-    });
-  }
-  messagesEl.appendChild(div);scrollBottom();
-  if(!isMine&&!isHistory){playNotifSound();notifyNewMessage(msg);if(navigator.vibrate)navigator.vibrate(80);}
-}
-
-if(window.visualViewport)window.visualViewport.addEventListener('resize',()=>setTimeout(scrollBottom,100));
-
-  // ── ADMİN PANELİ FONKSİYONLARI ────────────────────────────────────────────────
-document.getElementById('admin-login-btn').addEventListener('click',async()=>{
-  const u=document.getElementById('admin-user-input').value.trim();
-  const p=document.getElementById('admin-pass-input').value;
-  const err=document.getElementById('admin-login-error');
-  try{
-    const res=await fetch('/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});
-    const data=await res.json();
-    if(data.ok){ adminToken=data.token;sessionStorage.setItem('laviva_admin_token',adminToken);adminLogin.style.display='none';adminPanelEl.style.display='flex';adminPanelEl.classList.add('active');loadAdminRooms(); }
-    else err.textContent=data.error||'Hata';
-  }catch(e){err.textContent='Bağlantı hatası';}
-});
-
-document.getElementById('admin-logout-btn').addEventListener('click',async()=>{
-  try{await fetch('/admin/logout',{method:'POST',headers:{'x-admin-token':adminToken}});}catch(e){}
-  adminToken=null;sessionStorage.removeItem('laviva_admin_token');
-  adminPanelEl.classList.remove('active');adminPanelEl.style.display='none';
-  adminLogin.style.display='flex';
-  document.getElementById('admin-user-input').value='';
-  document.getElementById('admin-pass-input').value='';
-});
-
-async function loadAdminRooms(){
-  const list=document.getElementById('admin-rooms-list');
-  const msg=document.getElementById('admin-msg');
-  list.innerHTML='<div style="color:#555;font-size:0.85rem;text-align:center;padding:8px">Yükleniyor...</div>';
-  try{
-    const res=await fetch('/admin/rooms',{headers:{'x-admin-token':adminToken}});
-    if(res.status===401){adminPanelEl.classList.remove('active');adminPanelEl.style.display='none';adminLogin.style.display='flex';return;}
-    const rooms=await res.json();
-    list.innerHTML='';
-    rooms.forEach(r=>{
-      const card=document.createElement('div');card.className='admin-room-card';
-      card.innerHTML=`<div class="admin-room-header"><span class="admin-room-id">ID: ${escapeHtml(r.id)}</span><span class="admin-room-online">● ${r.online} çevrimiçi</span></div><div class="admin-room-fields"><input class="r-name" placeholder="Oda adı" value="${escapeHtml(r.name)}"/><input class="r-pass" type="password" placeholder="Yeni şifre" value="${escapeHtml(r.password)}"/></div><div class="admin-room-actions"><button class="btn-save">💾 Kaydet</button><button class="btn-clear">🗑 Mesajlar</button><button class="btn-delete">✕ Sil</button></div>`;
-      card.querySelector('.btn-save').addEventListener('click',async()=>{
-        const name=card.querySelector('.r-name').value.trim();const pass=card.querySelector('.r-pass').value;
-        if(!name){msg.textContent='Ad boş olamaz';msg.style.color='#ff4d4d';return;}
-        const r2=await fetch(`/admin/rooms/${r.id}`,{method:'PUT',headers:{'Content-Type':'application/json','x-admin-token':adminToken},body:JSON.stringify({name,password:pass||undefined})});
-        const d=await r2.json();msg.textContent=d.ok?'✓ Kaydedildi':'Hata: '+d.error;msg.style.color=d.ok?'var(--accent-light)':'#ff4d4d';setTimeout(()=>{msg.textContent='';},3000);
-      });
-      card.querySelector('.btn-clear').addEventListener('click',async()=>{
-        if(!confirm(`"${r.name}" odasının TÜM mesajları silinsin mi?`))return;
-        const r2=await fetch(`/admin/rooms/${r.id}/messages`,{method:'DELETE',headers:{'x-admin-token':adminToken}});
-        const d=await r2.json();msg.textContent=d.ok?'✓ Silindi':'Hata';msg.style.color=d.ok?'var(--accent-light)':'#ff4d4d';setTimeout(()=>{msg.textContent='';},3000);
-      });
-      card.querySelector('.btn-delete').addEventListener('click',async()=>{
-        if(!confirm(`"${r.name}" odası SİLİNSİN mi?`))return;
-        const r2=await fetch(`/admin/rooms/${r.id}`,{method:'DELETE',headers:{'x-admin-token':adminToken}});
-        const d=await r2.json();if(d.ok){loadAdminRooms();msg.textContent='✓ Oda silindi';msg.style.color='var(--accent-light)';setTimeout(()=>{msg.textContent='';},3000);}
-      });
-      list.appendChild(card);
-    });
-  }catch(e){list.innerHTML='<div style="color:#ff4d4d;font-size:0.85rem;text-align:center;padding:8px">Hata</div>';}
-}
-
-document.getElementById('add-room-btn').addEventListener('click',async()=>{
-  const name=document.getElementById('new-room-name').value.trim();
-  const pass=document.getElementById('new-room-pass').value;
-  const msg=document.getElementById('admin-msg');
-  if(!name||!pass){msg.textContent='Ad ve şifre gerekli';msg.style.color='#ff4d4d';return;}
-  const res=await fetch('/admin/rooms',{method:'POST',headers:{'Content-Type':'application/json','x-admin-token':adminToken},body:JSON.stringify({name,password:pass})});
-  const d=await res.json();
-  if(d.ok){document.getElementById('new-room-name').value='';document.getElementById('new-room-pass').value='';loadAdminRooms();msg.textContent='✓ Oda eklendi';msg.style.color='var(--accent-light)';}
-  else{msg.textContent='Hata: '+d.error;msg.style.color='#ff4d4d';}
-  setTimeout(()=>{msg.textContent='';},3000);
-});
-
-// ── BAŞLANGIÇ ────────────────────────────────────────────────────────────────
-if(Date.now()>=SHUTDOWN_TIME){isClosed=true;showScreen('closed');}
-else{showScreen('room-select');loadRooms();}
+loadRooms();
 </script>
 </body>
 </html>
