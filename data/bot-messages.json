@@ -1,7 +1,7 @@
 {
   "genel": [
     "Bugün de bir adım attın, bu bile yeterli.",
-    "Zor günler kalıcı değildir, geçip gidiyorlar.",
+    "Zor günler kalıcı değil, geçip gidiyorlar.",
     "Kendine biraz nazik davranmayı unutma.",
     "Her şeyi bugün çözmek zorunda değilsin.",
     "Derin bir nefes al, şu an burada olman yeterli.",
@@ -11,9 +11,15 @@
     "Yorgunsan durman normal, devam etmek zorunda değilsin.",
     "Bir gün her şey daha hafif gelecek.",
     "Sadece bugünü düşün, yarın kendi zamanında gelecek.",
-    "Susmak da bir cevaptır, kendine zaman tanı.",
     "Bir adım geri atmak, pes etmek değildir.",
-    "Bugün sadece nefes alman bile bir başarı sayılır."
+    "Bugün nefes alman bile bir başarı sayılır.",
+    "Elinden geleni yaptın, bu yeterli.",
+    "Bugün yavaş gitmen sorun değil, yine de ilerliyorsun.",
+    "Hislerin ne olursa olsun, ben buradayım.",
+    "Kendinle biraz daha barışık olabilirsin bugün.",
+    "İyi olmak zorunda değilsin, sadece burada olman yeter.",
+    "Bugün küçük bir mola vermeyi hak ediyorsun.",
+    "Ne hissedersen hisset, yalnız değilsin."
   ],
   "moral": [
     "Güçlü olmak her zaman ayakta kalmak değildir, bazen sadece nefes almaktır.",
@@ -22,8 +28,14 @@
     "Geçmişi taşımak zorunda değilsin, bugüne odaklanabilirsin.",
     "Duygularının olması sorun değil, onlarla oturmak bile bir adımdır.",
     "Şu an hissettiğin şey geçici, sen değilsin.",
-    "Bazı günler sadece ayakta kalmak yeterli bir zaferdir.",
-    "Kendine söylediğin sözlere de nazik ol."
+    "Bazı günler sadece ayakta kalmak yeterli bir başarıdır.",
+    "Kendine söylediğin sözlere de nazik ol.",
+    "Yanındayım, bunu tek başına taşımak zorunda değilsin.",
+    "Bugün ağır geliyorsa, yükünü azaltmak için izin ver kendine.",
+    "Kendine kızmak yerine, kendine anlayış göster.",
+    "Bir adım at, gerisi zamanla gelir.",
+    "Bugün eksik hissetsen de, eksik değilsin.",
+    "Sen düşündüğünden çok daha güçlüsün."
   ],
   "umut": [
     "Önünde hâlâ güzel günler var.",
@@ -33,6 +45,11 @@
     "İyileşmek doğrusal değildir, geri adım atman da normal.",
     "Bugün göremesen de, ileride bu günlere gülümseyerek bakacaksın.",
     "Işık her zaman en karanlık anın hemen ardından gelir.",
-    "Sen fark etmesen de, ilerliyorsun."
+    "Sen fark etmesen de, ilerliyorsun.",
+    "Bu hisler kalıcı değil, sadece şu anın bir parçası.",
+    "Bir gün geriye dönüp bugüne 'başardım' diyeceksin.",
+    "Küçük umutlar bile yol almanı sağlar.",
+    "Yavaş da olsa ilerlemek, hiç ilerlememekten iyidir.",
+    "Bugünün ağırlığı, yarının hafifliğine dönüşecek."
   ]
 }
