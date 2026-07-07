@@ -10,6 +10,12 @@ const PORT = process.env.PORT || 3000;
 const SITE_PASSWORD = process.env.SITE_PASSWORD || 'labubu';
 const SESSION_SECRET = process.env.SESSION_SECRET || 'aero-gizli-anahtar-degistir';
 
+// Railway (ve benzeri) bir ters proxy arkasında çalışıyoruz.
+// Bu olmadan Express, bağlantının HTTPS olduğunu anlayamaz ve
+// "secure" çerezler tarayıcıya hiç kaydedilmez; sonuç olarak
+// login sonrası oturum tutulmaz ve kullanıcı sürekli login'e geri döner.
+app.set('trust proxy', 1);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -20,7 +26,10 @@ app.use(session({
   cookie: {
     maxAge: 1000 * 60 * 60 * 24 * 30, // 30 gün
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production'
+    // 'auto': proxy arkasında HTTPS ise secure=true, yerelde http ise secure=false
+    // olarak kendini ayarlar. Sabit "production" kontrolünden daha güvenilir.
+    secure: 'auto',
+    sameSite: 'lax'
   }
 }));
 

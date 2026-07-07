@@ -25,7 +25,7 @@ npm start
 4. Railway proje ayarlarında **Variables** sekmesine şunları ekle:
    - `SITE_PASSWORD` = `labubu` (istersen değiştir)
    - `SESSION_SECRET` = rastgele, uzun bir metin
-   - `NODE_ENV` = `production`
+   - (`NODE_ENV` eklemene gerek yok, oturum çerezi ortamı otomatik algılıyor)
 5. Deploy tamamlanınca Railway sana bir `*.up.railway.app` adresi verir. İstersen kendi domain'ini (theahmetco.site altında bir subdomain gibi) bu servise CNAME ile bağlayabilirsin.
 
 ## Notlar
