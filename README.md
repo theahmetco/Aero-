@@ -1,2 +1,0 @@
-# Aero-
-Sınırlı Kasvetli Chat
