@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>aero</title>
+<link rel="stylesheet" href="/public/css/login.css">
+</head>
+<body>
+
+<div class="clouds">
+  <div class="cloud"></div>
+  <div class="cloud"></div>
+  <div class="cloud"></div>
+</div>
+
+<div class="login-card">
+  <h1>aero</h1>
+  <p class="sub">devam etmek için şifreyi gir</p>
+  <form action="/login" method="POST">
+    <input type="password" name="password" placeholder="şifre" autofocus required>
+    <button type="submit">gir</button>
+  </form>
+  <div class="error-msg" id="errorMsg"></div>
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('hata')) {
+    document.getElementById('errorMsg').textContent = 'şifre yanlış, tekrar dene';
+  }
+</script>
+
+</body>
+</html>
