@@ -1,17 +1,14 @@
-[
-  {
-    "title": "Playlist 1",
-    "note": "Buraya kısa bir not yazabilirsin",
-    "spotifyUri": "spotify:playlist:37i9dQZF1DXcBWIGoYBM5M"
-  },
-  {
-    "title": "Playlist 2",
-    "note": "Buraya kısa bir not yazabilirsin",
-    "spotifyUri": "spotify:playlist:37i9dQZF1DX4sWSpwq3LiO"
-  },
-  {
-    "title": "Playlist 3",
-    "note": "Buraya kısa bir not yazabilirsin",
-    "spotifyUri": "spotify:playlist:37i9dQZF1DWXe9gFZP0gtP"
-  }
-]
+{
+  "special": [
+    {
+      "title": "Buraya özel şarkının adını yaz",
+      "note": "Bu bölüm sabit kalır, dilediğin zaman ekleyip çıkarabilirsin",
+      "spotifyUri": "spotify:track:XXXXXXXXXXXX"
+    }
+  ],
+  "playlists": [
+    { "title": "Lost Senfonisi", "note": "", "spotifyUri": "spotify:playlist:7tA6UWRHt17xgY9A3OjRFa" },
+    { "title": "Pop - Managed Playlist", "note": "", "spotifyUri": "spotify:playlist:1XIe6Cxq6U5MXQOTCqFEz2" },
+    { "title": "Gece Turu", "note": "", "spotifyUri": "spotify:playlist:71OnsR37HhwWHgeBdE6ZwK" }
+  ]
+}
