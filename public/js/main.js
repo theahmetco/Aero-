@@ -13,7 +13,6 @@ tabButtons.forEach(btn => {
 
 // --- Spotify URI -> embed linki ---
 function spotifyEmbedUrl(uri) {
-  // beklenen format: spotify:playlist:XXXX veya spotify:album:XXXX
   const parts = uri.split(':');
   if (parts.length !== 3) return null;
   const type = parts[1];
@@ -22,24 +21,31 @@ function spotifyEmbedUrl(uri) {
 }
 
 // --- Çalma listeleri ---
+function playlistCard(pl, special) {
+  const embed = spotifyEmbedUrl(pl.spotifyUri);
+  const height = pl.spotifyUri && pl.spotifyUri.startsWith('spotify:track:') ? 152 : 352;
+  return `
+    <div class="card${special ? ' special' : ''}">
+      <h3>${escapeHtml(pl.title)}</h3>
+      ${pl.note ? `<p>${escapeHtml(pl.note)}</p>` : ''}
+      ${embed ? `<iframe src="${embed}" width="100%" height="${height}" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>` : ''}
+    </div>
+  `;
+}
+
 fetch('/api/playlists')
   .then(r => r.json())
-  .then(playlists => {
+  .then(data => {
+    const special = data.special || [];
+    const playlists = data.playlists || [];
     const container = document.getElementById('playlists-list');
-    if (!playlists.length) {
+    if (!special.length && !playlists.length) {
       container.innerHTML = '<div class="empty-state">henüz çalma listesi eklenmedi</div>';
       return;
     }
-    container.innerHTML = playlists.map(pl => {
-      const embed = spotifyEmbedUrl(pl.spotifyUri);
-      return `
-        <div class="card">
-          <h3>${escapeHtml(pl.title)}</h3>
-          ${pl.note ? `<p>${escapeHtml(pl.note)}</p>` : ''}
-          ${embed ? `<iframe src="${embed}" width="100%" height="352" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>` : ''}
-        </div>
-      `;
-    }).join('');
+    container.innerHTML =
+      special.map(pl => playlistCard(pl, true)).join('') +
+      playlists.map(pl => playlistCard(pl, false)).join('');
   })
   .catch(() => {
     document.getElementById('playlists-list').innerHTML = '<div class="empty-state">çalma listeleri yüklenemedi</div>';
