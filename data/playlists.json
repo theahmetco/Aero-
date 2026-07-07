@@ -1,10 +1,10 @@
 {
   "special": [
-    {
-      "title": "Buraya özel şarkının adını yaz",
-      "note": "Bu bölüm sabit kalır, dilediğin zaman ekleyip çıkarabilirsin",
-      "spotifyUri": "spotify:track:XXXXXXXXXXXX"
-    }
+    { "title": "Pilli Bebek", "note": "", "spotifyUri": "spotify:track:4zAy3I7Amhup6JeDLFkKhH" },
+    { "title": "7 Weeks & 3 Days", "note": "", "spotifyUri": "spotify:track:0axyPKOP8JcJCMYzXDpom0" },
+    { "title": "Dönence", "note": "", "spotifyUri": "spotify:track:6tHwJ9YDzDsWfZAqfcBKWC" },
+    { "title": "Chamber Of Reflection", "note": "", "spotifyUri": "spotify:track:7H7NyZ3G075GqPx2evsfeb" },
+    { "title": "Veridis Quo", "note": "", "spotifyUri": "spotify:track:2LD2gT7gwAurzdQDQtILds" }
   ],
   "playlists": [
     { "title": "Lost Senfonisi", "note": "", "spotifyUri": "spotify:playlist:7tA6UWRHt17xgY9A3OjRFa" },
