@@ -48,6 +48,11 @@ function readJSON(file) {
   return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 }
 
+function writeJSON(file, data) {
+  const filePath = path.join(__dirname, 'data', file);
+  fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
+}
+
 // --- Sayfalar ---
 
 app.get('/login', (req, res) => {
@@ -76,6 +81,10 @@ app.get('/', requireAuth, (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
+app.get('/admin', requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'admin.html'));
+});
+
 // --- API ---
 
 app.get('/api/playlists', requireAuth, (req, res) => {
@@ -93,6 +102,38 @@ app.get('/api/bot-message', requireAuth, (req, res) => {
   const messages = data[cat];
   const message = messages[Math.floor(Math.random() * messages.length)];
   res.json({ message });
+});
+
+// --- Admin API (kaydetme) ---
+
+app.post('/api/admin/playlists', requireAuth, (req, res) => {
+  const { special, playlists } = req.body;
+  if (!Array.isArray(special) || !Array.isArray(playlists)) {
+    return res.status(400).json({ error: 'Geçersiz veri' });
+  }
+  writeJSON('playlists.json', { special, playlists });
+  res.json({ ok: true });
+});
+
+app.post('/api/admin/memories', requireAuth, (req, res) => {
+  if (!Array.isArray(req.body)) {
+    return res.status(400).json({ error: 'Geçersiz veri' });
+  }
+  writeJSON('memories.json', req.body);
+  res.json({ ok: true });
+});
+
+app.get('/api/admin/bot-messages', requireAuth, (req, res) => {
+  res.json(readJSON('bot-messages.json'));
+});
+
+app.post('/api/admin/bot-messages', requireAuth, (req, res) => {
+  const data = req.body;
+  if (typeof data !== 'object' || Array.isArray(data) || !data) {
+    return res.status(400).json({ error: 'Geçersiz veri' });
+  }
+  writeJSON('bot-messages.json', data);
+  res.json({ ok: true });
 });
 
 // Statik dosyalar (css/js/görseller hassas değil, herkese açık servis edilir;
