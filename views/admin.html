@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aero° · admin</title>
+<link rel="stylesheet" href="/public/css/style.css">
+<link rel="stylesheet" href="/public/css/admin.css">
+</head>
+<body>
+<div class="app">
+  <header class="hero">
+    <h1>Aero° admin</h1>
+    <p>çalma listelerini, anıları ve sözleri buradan düzenle</p>
+  </header>
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="a-playlists">çalma listeleri</button>
+    <button class="tab-btn" data-tab="a-memories">anılar</button>
+    <button class="tab-btn" data-tab="a-messages">sözler</button>
+  </nav>
+
+  <section id="a-playlists" class="panel active">
+    <h3 class="section-title">★ Özel şarkılar</h3>
+    <div id="specialRows"></div>
+    <button class="add-btn" data-add="special">+ özel şarkı ekle</button>
+    <h3 class="section-title">Çalma listeleri</h3>
+    <div id="playlistRows"></div>
+    <button class="add-btn" data-add="playlist">+ playlist ekle</button>
+    <button class="save-btn" id="savePlaylists">çalma listelerini kaydet</button>
+    <div class="save-msg" id="msgPlaylists"></div>
+  </section>
+
+  <section id="a-memories" class="panel">
+    <div id="memoryRows"></div>
+    <button class="add-btn" data-add="memory">+ anı ekle</button>
+    <button class="save-btn" id="saveMemories">anıları kaydet</button>
+    <div class="save-msg" id="msgMemories"></div>
+  </section>
+
+  <section id="a-messages" class="panel">
+    <p class="hint">her satıra bir söz yaz.</p>
+    <label>genel</label>
+    <textarea id="msgGenel" rows="8"></textarea>
+    <label>moral</label>
+    <textarea id="msgMoral" rows="8"></textarea>
+    <label>umut</label>
+    <textarea id="msgUmut" rows="8"></textarea>
+    <button class="save-btn" id="saveMessages">sözleri kaydet</button>
+    <div class="save-msg" id="msgMessages"></div>
+  </section>
+
+  <footer class="logout"><a href="/">siteye dön</a></footer>
+</div>
+<script src="/public/js/particles.js"></script>
+<script src="/public/js/admin.js"></script>
+</body>
+</html>
