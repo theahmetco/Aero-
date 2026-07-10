@@ -1,3 +1,4 @@
+// --- Sekmeler ---
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -15,6 +16,7 @@ function rowCard(fields, onRemove) {
   return div;
 }
 
+// --- Çalma listeleri ---
 let playlistsData = { special: [], playlists: [] };
 
 function addSpecialRow(item = { title: '', spotifyUri: '', note: '' }) {
@@ -50,10 +52,14 @@ document.getElementById('savePlaylists').addEventListener('click', () => {
   const body = { special: readRows('specialRows'), playlists: readRows('playlistRows') };
   fetch('/api/admin/playlists', {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
-  }).then(r => r.json()).then(() => showMsg('msgPlaylists', 'kaydedildi ✓'))
-    .catch(() => showMsg('msgPlaylists', 'kaydedilemedi'));
+  }).then(async r => {
+    if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || 'kaydedilemedi');
+    return r.json();
+  }).then(() => showMsg('msgPlaylists', 'kaydedildi ✓'))
+    .catch(err => showMsg('msgPlaylists', err.message || 'kaydedilemedi'));
 });
 
+// --- Anılar ---
 function addMemoryRow(item = { title: '', date: '', text: '', image: '' }) {
   const el = rowCard(`
     <input class="f-title" placeholder="başlık" value="${escapeAttr(item.title)}">
@@ -76,19 +82,31 @@ document.getElementById('saveMemories').addEventListener('click', () => {
 
   fetch('/api/admin/memories', {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(rows)
-  }).then(r => r.json()).then(() => showMsg('msgMemories', 'kaydedildi ✓'))
-    .catch(() => showMsg('msgMemories', 'kaydedilemedi'));
+  }).then(async r => {
+    if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || 'kaydedilemedi');
+    return r.json();
+  }).then(() => showMsg('msgMemories', 'kaydedildi ✓'))
+    .catch(err => showMsg('msgMemories', err.message || 'kaydedilemedi'));
 });
 
+// --- Sözler ---
 document.getElementById('saveMessages').addEventListener('click', () => {
   const toLines = id => document.getElementById(id).value.split('\n').map(s => s.trim()).filter(Boolean);
-  const body = { genel: toLines('msgGenel'), moral: toLines('msgMoral'), umut: toLines('msgUmut') };
+  const body = {
+    genel: toLines('msgGenel'),
+    moral: toLines('msgMoral'),
+    umut: toLines('msgUmut')
+  };
   fetch('/api/admin/bot-messages', {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
-  }).then(r => r.json()).then(() => showMsg('msgMessages', 'kaydedildi ✓'))
-    .catch(() => showMsg('msgMessages', 'kaydedilemedi'));
+  }).then(async r => {
+    if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || 'kaydedilemedi');
+    return r.json();
+  }).then(() => showMsg('msgMessages', 'kaydedildi ✓'))
+    .catch(err => showMsg('msgMessages', err.message || 'kaydedilemedi'));
 });
 
+// --- Verileri yükle ---
 fetch('/api/playlists').then(r => r.json()).then(data => {
   (data.special || []).forEach(addSpecialRow);
   (data.playlists || []).forEach(addPlaylistRow);
@@ -104,6 +122,17 @@ fetch('/api/admin/bot-messages').then(r => r.json()).then(data => {
   document.getElementById('msgUmut').value = (data.umut || []).join('\n');
 });
 
-function escapeAttr(str) { return (str ?? '').toString().replace(/"/g, '&quot;'); }
-function escapeText(str) { const d = document.createElement('div'); d.textContent = str ?? ''; return d.innerHTML; }
-function showMsg(id, text) { const el = document.getElementById(id); el.textContent = text; setTimeout(() => { el.textContent = ''; }, 2500); }
+// --- Yardımcı ---
+function escapeAttr(str) {
+  return (str ?? '').toString().replace(/"/g, '&quot;');
+}
+function escapeText(str) {
+  const div = document.createElement('div');
+  div.textContent = str ?? '';
+  return div.innerHTML;
+}
+function showMsg(id, text) {
+  const el = document.getElementById(id);
+  el.textContent = text;
+  setTimeout(() => { el.textContent = ''; }, 2500);
+}
