@@ -8,6 +8,7 @@ const PORT = process.env.PORT || 3000;
 
 // Şifre: ortam değişkeninden okunur, yoksa varsayılan "labubu" kullanılır
 const SITE_PASSWORD = process.env.SITE_PASSWORD || 'labubu';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin';
 const SESSION_SECRET = process.env.SESSION_SECRET || 'aero-gizli-anahtar-degistir';
 
 // Railway (ve benzeri) bir ters proxy arkasında çalışıyoruz.
@@ -41,6 +42,16 @@ function requireAuth(req, res, next) {
     return res.status(401).json({ error: 'Giriş gerekli' });
   }
   return res.redirect('/login');
+}
+
+function requireAdmin(req, res, next) {
+  if (req.session && req.session.authenticated && req.session.isAdmin) {
+    return next();
+  }
+  if (req.originalUrl.startsWith('/api/')) {
+    return res.status(401).json({ error: 'Admin girişi gerekli' });
+  }
+  return res.redirect('/admin');
 }
 
 function readJSON(file) {
@@ -82,7 +93,19 @@ app.get('/', requireAuth, (req, res) => {
 });
 
 app.get('/admin', requireAuth, (req, res) => {
+  if (!req.session.isAdmin) {
+    return res.sendFile(path.join(__dirname, 'views', 'admin-login.html'));
+  }
   res.sendFile(path.join(__dirname, 'views', 'admin.html'));
+});
+
+app.post('/admin-login', requireAuth, (req, res) => {
+  const { password } = req.body;
+  if (password === ADMIN_PASSWORD) {
+    req.session.isAdmin = true;
+    return res.redirect('/admin');
+  }
+  return res.redirect('/admin?hata=1');
 });
 
 // --- API ---
@@ -106,7 +129,7 @@ app.get('/api/bot-message', requireAuth, (req, res) => {
 
 // --- Admin API (kaydetme) ---
 
-app.post('/api/admin/playlists', requireAuth, (req, res) => {
+app.post('/api/admin/playlists', requireAdmin, (req, res) => {
   const { special, playlists } = req.body;
   if (!Array.isArray(special) || !Array.isArray(playlists)) {
     return res.status(400).json({ error: 'Geçersiz veri' });
@@ -115,7 +138,7 @@ app.post('/api/admin/playlists', requireAuth, (req, res) => {
   res.json({ ok: true });
 });
 
-app.post('/api/admin/memories', requireAuth, (req, res) => {
+app.post('/api/admin/memories', requireAdmin, (req, res) => {
   if (!Array.isArray(req.body)) {
     return res.status(400).json({ error: 'Geçersiz veri' });
   }
@@ -123,11 +146,11 @@ app.post('/api/admin/memories', requireAuth, (req, res) => {
   res.json({ ok: true });
 });
 
-app.get('/api/admin/bot-messages', requireAuth, (req, res) => {
+app.get('/api/admin/bot-messages', requireAdmin, (req, res) => {
   res.json(readJSON('bot-messages.json'));
 });
 
-app.post('/api/admin/bot-messages', requireAuth, (req, res) => {
+app.post('/api/admin/bot-messages', requireAdmin, (req, res) => {
   const data = req.body;
   if (typeof data !== 'object' || Array.isArray(data) || !data) {
     return res.status(400).json({ error: 'Geçersiz veri' });
